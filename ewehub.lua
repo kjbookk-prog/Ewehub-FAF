@@ -48,7 +48,7 @@ EWEHUB:RegisterConfigField("SelectedEggs", function() return Settings.SelectedEg
 local DaftarGears = {
     "BasicAutoFeeder", "FoodScoop", "BasicFoodTray", "MoveTool", 
     "MagnifyingGlass", "AdvancedFoodTray", "AdvancedAutoFeeder", 
-    "XPCookie", "TeleportWand", "StarLock", "SupremeAutoFeeder", 
+    "XpCookie", "SupremeFoodTray", "TeleportWand", "StarLock", "SupremeAutoFeeder", 
     "PetToy", "TradingTicket", "EggHatcher", "PetWhistle", 
     "GoldenCookie", "MutationBeacon", "EggIncubator", 
     "ExtremeAutoFeeder", "StormHorn", "GodlyAutoFeeder"
