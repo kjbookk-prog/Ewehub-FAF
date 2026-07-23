@@ -46,7 +46,7 @@ EWEHUB:RegisterConfigField("SelectedEggs", function() return Settings.SelectedEg
 
 -- DAFTAR NAMA ITEM 
 local DaftarGears = {
-    "BasicAutoFeeder", "FoodScoop", "BasicFoodTray", "MoveTool", 
+    "BasicAutoFeeder", "FoodScoop", "BasicFoodTray", "NetMover", 
     "MagnifyingGlass", "AdvancedFoodTray", "AdvancedAutoFeeder", 
     "XpCookie", "SupremeFoodTray", "TeleportWand", "StarLock", "SupremeAutoFeeder", 
     "PetToy", "TradingTicket", "EggHatcher", "PetWhistle", 
