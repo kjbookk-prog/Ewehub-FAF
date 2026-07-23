@@ -1,4 +1,4 @@
--- Memuat Library EWEHUB (v4.3.2)
+-- Memuat Library EWEHUB (v4.4.0)
 local EWEHUB = loadstring(game:HttpGet("https://raw.githubusercontent.com/kjbookk-prog/Ewhub-repo/refs/heads/main/Library-1.lua"))()
 
 local Window = EWEHUB:CreateWindow({
@@ -36,7 +36,7 @@ local Settings = {
     AutoBuyEggEnabled = false
 }
 
--- Daftarkan variabel kustom ke sistem config v4.3.x agar ikut tersimpan & dimuat
+-- Daftarkan variabel kustom ke sistem config v4.4.0 agar ikut tersimpan & dimuat
 EWEHUB:RegisterConfigField("LoopTime", function() return Settings.LoopTime end, function(v) Settings.LoopTime = v end)
 EWEHUB:RegisterConfigField("SelectedPlace", function() return Settings.SelectedPlace end, function(v) Settings.SelectedPlace = v end)
 EWEHUB:RegisterConfigField("SelectedFoodTray", function() return Settings.SelectedFoodTray end, function(v) Settings.SelectedFoodTray = v end)
