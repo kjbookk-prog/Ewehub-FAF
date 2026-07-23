@@ -1,4 +1,4 @@
--- Memuat Library EWEHUB (v4.2.0)
+-- Memuat Library EWEHUB (v4.3.0)
 local EWEHUB = loadstring(game:HttpGet("https://raw.githubusercontent.com/kjbookk-prog/Ewhub-repo/refs/heads/main/Library-1.lua"))()
 
 local Window = EWEHUB:CreateWindow({
@@ -36,11 +36,19 @@ local Settings = {
     AutoBuyEggEnabled = false
 }
 
+-- Daftarkan variabel kustom ke sistem config v4.3.0 agar ikut tersimpan & dimuat
+EWEHUB:RegisterConfigField("LoopTime", function() return Settings.LoopTime end, function(v) Settings.LoopTime = v end)
+EWEHUB:RegisterConfigField("SelectedPlace", function() return Settings.SelectedPlace end, function(v) Settings.SelectedPlace = v end)
+EWEHUB:RegisterConfigField("SelectedFoodTray", function() return Settings.SelectedFoodTray end, function(v) Settings.SelectedFoodTray = v end)
+EWEHUB:RegisterConfigField("SelectedGears", function() return Settings.SelectedGears end, function(v) Settings.SelectedGears = v end)
+EWEHUB:RegisterConfigField("SelectedBaits", function() return Settings.SelectedBaits end, function(v) Settings.SelectedBaits = v end)
+EWEHUB:RegisterConfigField("SelectedEggs", function() return Settings.SelectedEggs end, function(v) Settings.SelectedEggs = v end)
+
 -- DAFTAR NAMA ITEM 
 local DaftarGears = {
-    "BasicAutoFeeder", "FoodScoop", "BasicFoodTray", "NetMover", 
+    "BasicAutoFeeder", "FoodScoop", "BasicFoodTray", "MoveTool", 
     "MagnifyingGlass", "AdvancedFoodTray", "AdvancedAutoFeeder", 
-    "XpCookie", "TeleportWand", "StarLock", "SupremeAutoFeeder","SupremeFoodTray",
+    "XpCookie","SupremeFoodTray" ,"TeleportWand", "StarLock", "SupremeAutoFeeder", 
     "PetToy", "TradingTicket", "EggHatcher", "PetWhistle", 
     "GoldenCookie", "MutationBeacon", "EggIncubator", 
     "ExtremeAutoFeeder", "StormHorn", "GodlyAutoFeeder"
@@ -57,22 +65,7 @@ local DaftarEggs = {
     "Starter", "Basic", "Forest", "Polar", "Tropical", "Exotic"
 }
 
-local FolderName = "AutoHubConfigs"
-if not isfolder(FolderName) then makefolder(FolderName) end
-
--- Fungsi untuk mengambil daftar config
-local function GetSavedConfigs()
-    local configs = {}
-    if isfolder(FolderName) then
-        for _, file in ipairs(listfiles(FolderName)) do
-            local fileName = file:match("([^/\\]+)%.json$")
-            if fileName then table.insert(configs, fileName) end
-        end
-    end
-    return #configs == 0 and {"Kosong"} or configs
-end
-
--- Koordinat baru sesuai remote spy terbaru
+-- Koordinat sesuai remote spy terbaru
 local PlaceCoordinates = {
     ["1"] = vector.create(-130.63699340820312, -0.012000083923339844, -355.5),
     ["2"] = vector.create(12.362998962402344, -0.012000083923339844, -300.5),
@@ -342,102 +335,6 @@ TabEgg:CreateToggle({
                     task.wait(Settings.LoopTime)
                 end
             end)
-        end
-    end,
-})
-
--- ==========================================
--- TAB 6: KONFIG
--- ==========================================
-local TabKonfig = Window:CreateTab({ Name = "Konfig", Icon = "💾" })
-
-local NewConfigName = ""
-local SelectedDropdownConfig = ""
-
-TabKonfig:CreateTextbox({
-    Name = "Nama Config Baru",
-    Placeholder = "Ketik nama...",
-    Default = "",
-    Flag = "NewConfigTextbox",
-    Callback = function(Text) 
-        NewConfigName = Text 
-    end,
-})
-
-local ConfigDropdown
-
-TabKonfig:CreateButton({
-    Name = "Create SC (Buat Baru)",
-    Callback = function()
-        if NewConfigName == "" or NewConfigName == "Kosong" then return end
-        local HttpService = game:GetService("HttpService")
-        local dataToSave = {
-            SavedLoopTime = Settings.LoopTime,
-            SavedPlace = Settings.SelectedPlace,
-            SavedFoodTray = Settings.SelectedFoodTray,
-            SavedGears = Settings.SelectedGears,
-            SavedBaits = Settings.SelectedBaits,
-            SavedEggs = Settings.SelectedEggs
-        }
-        writefile(FolderName .. "/" .. NewConfigName .. ".json", HttpService:JSONEncode(dataToSave))
-        EWEHUB:Notify({Title = "Berhasil!", Content = "Config dibuat.", Duration = 3})
-        ConfigDropdown.SetOptions(GetSavedConfigs())
-    end,
-})
-
-local InitialConfigs = GetSavedConfigs()
-ConfigDropdown = TabKonfig:CreateDropdown({
-    Name = "Pilih Config",
-    Options = InitialConfigs,
-    Default = InitialConfigs[1],
-    Multi = false,
-    Flag = "SavedConfigs",
-    Callback = function(Selected) 
-        SelectedDropdownConfig = Selected 
-    end,
-})
-
-TabKonfig:CreateButton({
-    Name = "Overwrite Terpilih",
-    Callback = function()
-        if SelectedDropdownConfig == "" or SelectedDropdownConfig == "Kosong" then return end
-        local HttpService = game:GetService("HttpService")
-        local dataToSave = {
-            SavedLoopTime = Settings.LoopTime,
-            SavedPlace = Settings.SelectedPlace,
-            SavedFoodTray = Settings.SelectedFoodTray,
-            SavedGears = Settings.SelectedGears,
-            SavedBaits = Settings.SelectedBaits,
-            SavedEggs = Settings.SelectedEggs
-        }
-        writefile(FolderName .. "/" .. SelectedDropdownConfig .. ".json", HttpService:JSONEncode(dataToSave))
-        EWEHUB:Notify({Title = "Overwritten!", Content = "Config diperbarui.", Duration = 3})
-    end,
-})
-
-TabKonfig:CreateButton({
-    Name = "Muat (Load) Terpilih",
-    Callback = function()
-        if SelectedDropdownConfig == "" or SelectedDropdownConfig == "Kosong" then return end
-        local filePath = FolderName .. "/" .. SelectedDropdownConfig .. ".json"
-        if isfile(filePath) then
-            local decodedData = game:GetService("HttpService"):JSONDecode(readfile(filePath))
-            
-            Settings.LoopTime = decodedData.SavedLoopTime or 0.1
-            Settings.SelectedPlace = decodedData.SavedPlace or "1"
-            Settings.SelectedFoodTray = decodedData.SavedFoodTray or "SupremeFoodTray"
-            Settings.SelectedGears = decodedData.SavedGears or {}
-            Settings.SelectedBaits = decodedData.SavedBaits or {}
-            Settings.SelectedEggs = decodedData.SavedEggs or {}
-            
-            LoopTimeSlider.Set(Settings.LoopTime)
-            HomePlaceDropdown.Set(Settings.SelectedPlace)
-            FoodTrayDropdown.Set(Settings.SelectedFoodTray)
-            GearDropdownUI.Set(Settings.SelectedGears)
-            BaitDropdownUI.Set(Settings.SelectedBaits)
-            EggDropdownUI.Set(Settings.SelectedEggs)
-            
-            EWEHUB:Notify({Title = "Berhasil Dimuat!", Content = "Config digunakan.", Duration = 3})
         end
     end,
 })
