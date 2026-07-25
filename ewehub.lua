@@ -68,7 +68,7 @@ local DaftarBaits = {
     "Starter", "Novice", "Reef", "DeepSea", "Koi", "River", 
     "Puffer", "Glo", "Seal", "Ray", "Octopus", "Axolotl", 
     "Jelly", "Whale", "Shark", "Squid", "Megalodon", 
-    "Kraken", "Maw", "Bloop", "OceanEater", "Serpent"
+    "Kraken", "Maja", "Bloop", "OceanEater", "Serpent"
 }
 
 local DaftarEggs = {
