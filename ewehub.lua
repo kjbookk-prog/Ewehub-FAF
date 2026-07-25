@@ -56,7 +56,7 @@ EWEHUB:RegisterConfigField("SelectedCosmetics", function() return Settings.Selec
 
 -- ITEM NAME LISTS 
 local DaftarGears = {
-    "BasicAutoFeeder", "FoodScoop", "BasicFoodTray", "MoveTool", 
+    "BasicAutoFeeder", "FoodScoop", "BasicFoodTray", "NetMover", 
     "MagnifyingGlass", "AdvancedFoodTray", "AdvancedAutoFeeder", 
     "XpCookie", "SupremeFoodTray", "TeleportWand", "StarLock", "SupremeAutoFeeder", 
     "PetToy", "TradingTicket", "EggHatcher", "PetWhistle", 
