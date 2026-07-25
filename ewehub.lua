@@ -1,4 +1,4 @@
--- Memuat Library EWEHUB (v4.7.0)
+-- Loading EWEHUB Library (v4.7.0)
 local EWEHUB = loadstring(game:HttpGet("https://raw.githubusercontent.com/kjbookk-prog/Ewhub-repo/refs/heads/main/Library-1.lua"))()
 
 local Window = EWEHUB:CreateWindow({
@@ -6,8 +6,8 @@ local Window = EWEHUB:CreateWindow({
     ToggleKey = Enum.KeyCode.RightControl,
     ForcePlayerGui = false,
     Watermark = true,
-    Icon = "📋",
-    Notes = "Tekan tombol Minimize (—) untuk menyembunyikan window menjadi ikon bulat mengambang yang dapat digeser.",
+    Icon = "🚀",
+    Notes = "Press the Minimize button (—) to hide the window into a draggable floating round icon.",
     Discord = {
         Enabled = false,
         Invite = "https://discord.gg/xxxx",
@@ -16,7 +16,7 @@ local Window = EWEHUB:CreateWindow({
 })
 
 -- ==========================================
--- VARIABEL PENGATURAN & LIST NAMA
+-- SETTINGS & NAME LIST VARIABLES
 -- ==========================================
 local Settings = {
     LoopTime = 0.1, 
@@ -35,18 +35,26 @@ local Settings = {
     AutoBuyBaitEnabled = false,
     
     SelectedEggs = {},
-    AutoBuyEggEnabled = false
+    AutoBuyEggEnabled = false,
+    
+    SelectedTravelingItems = {},
+    AutoBuyTravelingEnabled = false,
+    
+    SelectedCosmetics = {},
+    AutoBuyCosmeticEnabled = false
 }
 
--- Daftarkan variabel kustom ke sistem config v4.7.0 agar ikut tersimpan & dimuat
+-- Register custom variables to the v4.7.0 config system to save & load properly
 EWEHUB:RegisterConfigField("LoopTime", function() return Settings.LoopTime end, function(v) Settings.LoopTime = v end)
 EWEHUB:RegisterConfigField("SelectedPlace", function() return Settings.SelectedPlace end, function(v) Settings.SelectedPlace = v end)
 EWEHUB:RegisterConfigField("SelectedFoodTray", function() return Settings.SelectedFoodTray end, function(v) Settings.SelectedFoodTray = v end)
 EWEHUB:RegisterConfigField("SelectedGears", function() return Settings.SelectedGears end, function(v) Settings.SelectedGears = v end)
 EWEHUB:RegisterConfigField("SelectedBaits", function() return Settings.SelectedBaits end, function(v) Settings.SelectedBaits = v end)
 EWEHUB:RegisterConfigField("SelectedEggs", function() return Settings.SelectedEggs end, function(v) Settings.SelectedEggs = v end)
+EWEHUB:RegisterConfigField("SelectedTravelingItems", function() return Settings.SelectedTravelingItems end, function(v) Settings.SelectedTravelingItems = v end)
+EWEHUB:RegisterConfigField("SelectedCosmetics", function() return Settings.SelectedCosmetics end, function(v) Settings.SelectedCosmetics = v end)
 
--- DAFTAR NAMA ITEM 
+-- ITEM NAME LISTS 
 local DaftarGears = {
     "BasicAutoFeeder", "FoodScoop", "BasicFoodTray", "MoveTool", 
     "MagnifyingGlass", "AdvancedFoodTray", "AdvancedAutoFeeder", 
@@ -67,14 +75,22 @@ local DaftarEggs = {
     "Starter", "Basic", "Forest", "Polar", "Tropical", "Exotic"
 }
 
--- Koordinat sesuai remote spy terbaru
+local DaftarTravelingItems = {
+    "Zoo"
+}
+
+local DaftarCosmetics = {
+    "RunePillar"
+}
+
+-- Updated Coordinates
 local PlaceCoordinates = {
-    ["1"] = vector.create(-130.63699340820312, -0.012000083923339844, -355.5),
-    ["2"] = vector.create(12.362998962402344, -0.012000083923339844, -300.5),
-    ["3"] = vector.create(-131.63699340820312, -0.012000083923339844, -207.5),
-    ["4"] = vector.create(28.362998962402344, -0.012000083923339844, -114.5),
-    ["5"] = vector.create(-125.13700103759766, -0.012000083923339844, -13),
-    ["6"] = vector.create(20.862998962402344, -0.012000083923339844, 32)
+    ["1"] = Vector3.new(-141.13600158691406, -0.012000083923339844, 361),
+    ["2"] = Vector3.new(21.863998413085938, -0.012000083923339844, 306),
+    ["3"] = Vector3.new(16.863998413085938, -0.012000083923339844, 127),
+    ["4"] = Vector3.new(-135.13600158691406, -0.012000083923339844, 125),
+    ["5"] = Vector3.new(14.863998413085938, -0.012000083923339844, 14),
+    ["6"] = Vector3.new(-135.13600158691406, -0.012000083923339844, 14)
 }
 
 local function GetRemoteContainer()
@@ -87,11 +103,11 @@ end
 local Tab1 = Window:CreateTab({ 
     Name = "Auto Place", 
     Icon = "🏠",
-    Notes = "Atur waktu loop dan lokasi home place sebelum mengaktifkan Auto Place."
+    Notes = "Note: This feature is still under development and currently only works fully on Codex executor. Support for other executors is being worked on."
 })
 
 local LoopTimeSlider = Tab1:CreateSlider({
-    Name = "Waktu Loop (Semua Fitur Utama)",
+    Name = "Loop Time (All Main Features)",
     Min = 0.01, Max = 10,
     Default = Settings.LoopTime,
     Round = false,
@@ -113,7 +129,7 @@ local HomePlaceDropdown = Tab1:CreateDropdown({
 })
 
 local FoodTrayDropdown = Tab1:CreateDropdown({
-    Name = "Pilih Food Tray",
+    Name = "Select Food Tray",
     Options = {"SupremeFoodTray", "AdvancedFoodTray", "BasicFoodTray"},
     Default = "SupremeFoodTray",
     Multi = false,
@@ -124,7 +140,7 @@ local FoodTrayDropdown = Tab1:CreateDropdown({
 })
 
 Tab1:CreateToggle({
-    Name = "Mulai Auto Place",
+    Name = "Start Auto Place",
     Default = false,
     Flag = "AutoPlaceToggle",
     Callback = function(Value)
@@ -154,7 +170,7 @@ Tab1:CreateToggle({
 local TabEvent = Window:CreateTab({ 
     Name = "Event", 
     Icon = "⚡",
-    Notes = "Fitur event otomatis untuk memberi makan DrFallout, General, dan membuka nuke."
+    Notes = "Automatic event features to feed DrFallout, General, and open nukes."
 })
 
 TabEvent:CreateToggle({
@@ -232,11 +248,11 @@ TabEvent:CreateToggle({
 local TabGear = Window:CreateTab({ 
     Name = "Gear Shop", 
     Icon = "⚙️",
-    Notes = "Pilih beberapa gear sekaligus menggunakan Multi-select dropdown."
+    Notes = "Select multiple gears simultaneously using the Multi-select dropdown."
 })
 
 local GearDropdownUI = TabGear:CreateDropdown({
-    Name = "Pilih Gear (Bisa Tumpuk)",
+    Name = "Select Gear (Stackable)",
     Options = DaftarGears,
     Default = {},
     Multi = true,
@@ -277,11 +293,11 @@ TabGear:CreateToggle({
 local TabBait = Window:CreateTab({ 
     Name = "Bait Shop", 
     Icon = "🪱",
-    Notes = "Pilih beberapa umpan (bait) sekaligus menggunakan Multi-select dropdown."
+    Notes = "Select multiple baits simultaneously using the Multi-select dropdown."
 })
 
 local BaitDropdownUI = TabBait:CreateDropdown({
-    Name = "Pilih Bait (Bisa Tumpuk)",
+    Name = "Select Bait (Stackable)",
     Options = DaftarBaits,
     Default = {},
     Multi = true,
@@ -322,11 +338,11 @@ TabBait:CreateToggle({
 local TabEgg = Window:CreateTab({ 
     Name = "Egg Shop", 
     Icon = "🥚",
-    Notes = "Pilih beberapa telur (egg) sekaligus menggunakan Multi-select dropdown."
+    Notes = "Select multiple eggs simultaneously using the Multi-select dropdown."
 })
 
 local EggDropdownUI = TabEgg:CreateDropdown({
-    Name = "Pilih Egg (Bisa Tumpuk)",
+    Name = "Select Egg (Stackable)",
     Options = DaftarEggs,
     Default = {},
     Multi = true,
@@ -350,6 +366,96 @@ TabEgg:CreateToggle({
                             local container = GetRemoteContainer()
                             if container and container:FindFirstChild("shop.purchaseEgg") then
                                 container["shop.purchaseEgg"]:FireServer(eggName) 
+                            end
+                        end)
+                        task.wait(0.01)
+                    end
+                    task.wait(Settings.LoopTime)
+                end
+            end)
+        end
+    end,
+})
+
+-- ==========================================
+-- TAB 6: TRAVELING MERCHANT
+-- ==========================================
+local TabTraveling = Window:CreateTab({ 
+    Name = "Traveling Merchant", 
+    Icon = "🛒",
+    Notes = "Select multiple items simultaneously using the Multi-select dropdown."
+})
+
+local TravelingDropdownUI = TabTraveling:CreateDropdown({
+    Name = "Select Traveling Item (Stackable)",
+    Options = DaftarTravelingItems,
+    Default = {},
+    Multi = true,
+    Flag = "TravelingDropdown",
+    Callback = function(SelectedArray) 
+        Settings.SelectedTravelingItems = SelectedArray 
+    end,
+})
+
+TabTraveling:CreateToggle({
+    Name = "Auto Buy Traveling Merchant",
+    Default = false,
+    Flag = "AutoBuyTravelingToggle",
+    Callback = function(Value)
+        Settings.AutoBuyTravelingEnabled = Value
+        if Value then
+            task.spawn(function()
+                while Settings.AutoBuyTravelingEnabled do
+                    for _, itemName in ipairs(Settings.SelectedTravelingItems) do
+                        pcall(function() 
+                            local container = GetRemoteContainer()
+                            if container and container:FindFirstChild("merchant.purchaseItem") then
+                                container["merchant.purchaseItem"]:FireServer("travelling", itemName) 
+                            end
+                        end)
+                        task.wait(0.01)
+                    end
+                    task.wait(Settings.LoopTime)
+                end
+            end)
+        end
+    end,
+})
+
+-- ==========================================
+-- TAB 7: COSMETIC MERCHANT
+-- ==========================================
+local TabCosmetic = Window:CreateTab({ 
+    Name = "Cosmetic Merchant", 
+    Icon = "✨",
+    Notes = "Select multiple cosmetics simultaneously using the Multi-select dropdown."
+})
+
+local CosmeticDropdownUI = TabCosmetic:CreateDropdown({
+    Name = "Select Cosmetic (Stackable)",
+    Options = DaftarCosmetics,
+    Default = {},
+    Multi = true,
+    Flag = "CosmeticDropdown",
+    Callback = function(SelectedArray) 
+        Settings.SelectedCosmetics = SelectedArray 
+    end,
+})
+
+TabCosmetic:CreateToggle({
+    Name = "Auto Buy Cosmetic",
+    Default = false,
+    Flag = "AutoBuyCosmeticToggle",
+    Callback = function(Value)
+        Settings.AutoBuyCosmeticEnabled = Value
+        if Value then
+            task.spawn(function()
+                while Settings.AutoBuyCosmeticEnabled do
+                    for _, cosmeticName in ipairs(Settings.SelectedCosmetics) do
+                        pcall(function() 
+                            local container = GetRemoteContainer()
+                            if container and container:FindFirstChild("cosmeticsMerchant.purchase") then
+                                container["cosmeticsMerchant.purchase"]:FireServer(cosmeticName, true) 
                             end
                         end)
                         task.wait(0.01)
