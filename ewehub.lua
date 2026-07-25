@@ -1,4 +1,4 @@
--- Memuat Library EWEHUB (v4.4.0)
+-- Memuat Library EWEHUB (v4.7.0)
 local EWEHUB = loadstring(game:HttpGet("https://raw.githubusercontent.com/kjbookk-prog/Ewhub-repo/refs/heads/main/Library-1.lua"))()
 
 local Window = EWEHUB:CreateWindow({
@@ -6,6 +6,8 @@ local Window = EWEHUB:CreateWindow({
     ToggleKey = Enum.KeyCode.RightControl,
     ForcePlayerGui = false,
     Watermark = true,
+    Icon = "📋",
+    Notes = "Tekan tombol Minimize (—) untuk menyembunyikan window menjadi ikon bulat mengambang yang dapat digeser.",
     Discord = {
         Enabled = false,
         Invite = "https://discord.gg/xxxx",
@@ -36,7 +38,7 @@ local Settings = {
     AutoBuyEggEnabled = false
 }
 
--- Daftarkan variabel kustom ke sistem config v4.4.0 agar ikut tersimpan & dimuat
+-- Daftarkan variabel kustom ke sistem config v4.7.0 agar ikut tersimpan & dimuat
 EWEHUB:RegisterConfigField("LoopTime", function() return Settings.LoopTime end, function(v) Settings.LoopTime = v end)
 EWEHUB:RegisterConfigField("SelectedPlace", function() return Settings.SelectedPlace end, function(v) Settings.SelectedPlace = v end)
 EWEHUB:RegisterConfigField("SelectedFoodTray", function() return Settings.SelectedFoodTray end, function(v) Settings.SelectedFoodTray = v end)
@@ -46,7 +48,7 @@ EWEHUB:RegisterConfigField("SelectedEggs", function() return Settings.SelectedEg
 
 -- DAFTAR NAMA ITEM 
 local DaftarGears = {
-    "BasicAutoFeeder", "FoodScoop", "BasicFoodTray", "NetMover", 
+    "BasicAutoFeeder", "FoodScoop", "BasicFoodTray", "MoveTool", 
     "MagnifyingGlass", "AdvancedFoodTray", "AdvancedAutoFeeder", 
     "XpCookie", "SupremeFoodTray", "TeleportWand", "StarLock", "SupremeAutoFeeder", 
     "PetToy", "TradingTicket", "EggHatcher", "PetWhistle", 
@@ -82,7 +84,11 @@ end
 -- ==========================================
 -- TAB 1: AUTO PLACE
 -- ==========================================
-local Tab1 = Window:CreateTab({ Name = "Auto Place", Icon = "🏠" })
+local Tab1 = Window:CreateTab({ 
+    Name = "Auto Place", 
+    Icon = "🏠",
+    Notes = "Atur waktu loop dan lokasi home place sebelum mengaktifkan Auto Place."
+})
 
 local LoopTimeSlider = Tab1:CreateSlider({
     Name = "Waktu Loop (Semua Fitur Utama)",
@@ -145,7 +151,11 @@ Tab1:CreateToggle({
 -- ==========================================
 -- TAB 2: EVENT
 -- ==========================================
-local TabEvent = Window:CreateTab({ Name = "Event", Icon = "⚡" })
+local TabEvent = Window:CreateTab({ 
+    Name = "Event", 
+    Icon = "⚡",
+    Notes = "Fitur event otomatis untuk memberi makan DrFallout, General, dan membuka nuke."
+})
 
 TabEvent:CreateToggle({
     Name = "Feed DrFallout",
@@ -219,7 +229,11 @@ TabEvent:CreateToggle({
 -- ==========================================
 -- TAB 3: GEAR SHOP
 -- ==========================================
-local TabGear = Window:CreateTab({ Name = "Gear Shop", Icon = "⚙️" })
+local TabGear = Window:CreateTab({ 
+    Name = "Gear Shop", 
+    Icon = "⚙️",
+    Notes = "Pilih beberapa gear sekaligus menggunakan Multi-select dropdown."
+})
 
 local GearDropdownUI = TabGear:CreateDropdown({
     Name = "Pilih Gear (Bisa Tumpuk)",
@@ -260,7 +274,11 @@ TabGear:CreateToggle({
 -- ==========================================
 -- TAB 4: BAIT SHOP
 -- ==========================================
-local TabBait = Window:CreateTab({ Name = "Bait Shop", Icon = "🪱" })
+local TabBait = Window:CreateTab({ 
+    Name = "Bait Shop", 
+    Icon = "🪱",
+    Notes = "Pilih beberapa umpan (bait) sekaligus menggunakan Multi-select dropdown."
+})
 
 local BaitDropdownUI = TabBait:CreateDropdown({
     Name = "Pilih Bait (Bisa Tumpuk)",
@@ -301,7 +319,11 @@ TabBait:CreateToggle({
 -- ==========================================
 -- TAB 5: EGG SHOP
 -- ==========================================
-local TabEgg = Window:CreateTab({ Name = "Egg Shop", Icon = "🥚" })
+local TabEgg = Window:CreateTab({ 
+    Name = "Egg Shop", 
+    Icon = "🥚",
+    Notes = "Pilih beberapa telur (egg) sekaligus menggunakan Multi-select dropdown."
+})
 
 local EggDropdownUI = TabEgg:CreateDropdown({
     Name = "Pilih Egg (Bisa Tumpuk)",
