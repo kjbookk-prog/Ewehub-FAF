@@ -381,7 +381,7 @@ TabEgg:CreateToggle({
 -- TAB 6: TRAVELING MERCHANT
 -- ==========================================
 local TabTraveling = Window:CreateTab({ 
-    Name = "Traveling Merchant", 
+    Name = "TravMerch", 
     Icon = "🛒",
     Notes = "Select multiple items simultaneously using the Multi-select dropdown."
 })
@@ -426,7 +426,7 @@ TabTraveling:CreateToggle({
 -- TAB 7: COSMETIC MERCHANT
 -- ==========================================
 local TabCosmetic = Window:CreateTab({ 
-    Name = "Cosmetic Merchant", 
+    Name = "CosMerch", 
     Icon = "✨",
     Notes = "Select multiple cosmetics simultaneously using the Multi-select dropdown."
 })
