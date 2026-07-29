@@ -6,7 +6,7 @@ local Window = EWEHUB:CreateWindow({
     ToggleKey = Enum.KeyCode.RightControl,
     ForcePlayerGui = false,
     Watermark = true,
-    Icon = "📋",
+    Icon = "🚀",
     Notes = "Press the Minimize button (—) to hide the window into a draggable floating round icon.",
     Discord = {
         Enabled = false,
@@ -80,15 +80,7 @@ local DaftarTravelingItems = {
 }
 
 local DaftarCosmetics = {
-    "AtlantisLightPole", "AtlantisBanner", "TridentThrone", "KingThrone", "PixelLilypad",
-    "PixelLotus", "PixelTree", "PixelArcade", "CandyCane", "ChristmasLamp", "IceFishing", "SnowGlobe",
-    "Snowman", "SantaChair", "ChristmasTree", "Minicano", "RunePillar", "AshFlame", "Dragon", 
-    "LavaThrone", "Cannon", "PirayeFlag", "CrowNest", "Tower", "FlowerBush", "EasterEgg", "MarshmallowCane",
-    "MarshmallowTree", "MrBunny", "DinoEgg", "DinoSkull", "DinoBones", "JurrasicTree", "MoonLamp", "AlienSign"
-    "GloShrooms", "AlienPod", "AlienLamp", "AlienTree", "UfoStatue", "LilyPad", "Bamboo", "ZenRocks", "JapaneseLantern",
-    "ZenLantern", "BlossomTree", "ZenTower", "HeroSign", "HeroBush", "HeroBanner", "TallBuilding", "Building", "HeroBase",
-    "Teloporter", "TikiTorch", "Leafy", "TallLeafy", "TikiTotem", "PalmTree", "TikiHut", "TikiHouse", "ShadowGrass", "ShadowShroom",
-    "ShadowTorch", "ShadowQueen", "HoloBanner", "RobotAntena", "RobotLighpole", "LaunchPad", "MechStatue"
+    "AtlantisLightPole", "AtlantisBanner", "TridentThrone", "KingThrone", "PixelLilypad", "PixelLotus", "PixelTree", "PixelArcade", "CandyCane", "ChristmasLamp", "IceFishing", "SnowGlobe", "Snowman", "SantaChair", "ChristmasTree", "Minicano", "RunePillar", "AshFlame", "Dragon", "LavaThrone", "Cannon", "PirayeFlag", "CrowNest", "Tower", "FlowerBush", "EasterEgg", "MarshmallowCane", "MarshmallowTree", "MrBunny", "DinoEgg", "DinoSkull", "DinoBones", "JurrasicTree", "MoonLamp", "AlienSign", "GloShrooms", "AlienPod", "AlienLamp", "AlienTree", "UfoStatue", "LilyPad", "Bamboo", "ZenRocks", "JapaneseLantern", "ZenLantern", "BlossomTree", "ZenTower", "HeroSign", "HeroBush", "HeroBanner", "TallBuilding", "Building", "HeroBase", "Teloporter", "TikiTorch", "Leafy", "TallLeafy", "TikiTotem", "PalmTree", "TikiHut", "TikiHouse", "ShadowGrass", "ShadowShroom", "ShadowTorch", "ShadowQueen", "HoloBanner", "RobotAntena", "RobotLighpole", "LaunchPad", "MechStatue"
 }
 
 -- Updated Coordinates
@@ -386,7 +378,7 @@ TabEgg:CreateToggle({
 })
 
 -- ==========================================
--- TAB 6: TRAVELING MERCHANT
+-- TAB 6: TRAVMERCH
 -- ==========================================
 local TabTraveling = Window:CreateTab({ 
     Name = "TravMerch", 
@@ -406,7 +398,7 @@ local TravelingDropdownUI = TabTraveling:CreateDropdown({
 })
 
 TabTraveling:CreateToggle({
-    Name = "Auto Buy Traveling Merchant",
+    Name = "Auto Buy TravMerch",
     Default = false,
     Flag = "AutoBuyTravelingToggle",
     Callback = function(Value)
@@ -431,7 +423,7 @@ TabTraveling:CreateToggle({
 })
 
 -- ==========================================
--- TAB 7: COSMETIC MERCHANT
+-- TAB 7: COSMERCH
 -- ==========================================
 local TabCosmetic = Window:CreateTab({ 
     Name = "CosMerch", 
@@ -451,7 +443,7 @@ local CosmeticDropdownUI = TabCosmetic:CreateDropdown({
 })
 
 TabCosmetic:CreateToggle({
-    Name = "Auto Buy Cosmetic",
+    Name = "Auto Buy CosMerch",
     Default = false,
     Flag = "AutoBuyCosmeticToggle",
     Callback = function(Value)
@@ -474,3 +466,4 @@ TabCosmetic:CreateToggle({
         end
     end,
 })
+
