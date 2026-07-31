@@ -76,7 +76,7 @@ local DaftarEggs = {
 }
 
 local DaftarTravelingItems = {
-    "Zoo", "WildEgg", "BobaEgg", "Punk", "PetTag", "Ashen"
+    "Zoo", "Wild", "Boba", "Punk", "PetTag", "Ashen"
 }
 
 local DaftarCosmetics = {
