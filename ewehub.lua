@@ -20,13 +20,15 @@ local Window = EWEHUB:CreateWindow({
 -- ==========================================
 local Settings = {
     LoopTime = 0.1, 
-    SelectedPlace = "1",
-    SelectedFoodTray = "SupremeFoodTray",
+    SelectedPlace = "",
+    SelectedFoodTray = "",
     AutoPlaceEnabled = false,
     
-    FeedDrFalloutEnabled = false,
-    FeedGeneralEnabled = false,
-    AutoOpenNukeEnabled = false,
+    AutoOpenCrateEnabled = false,
+    SelectedCrate = "",
+    
+    AutoBuyEventItemEnabled = false,
+    SelectedEventItem = "",
     
     SelectedGears = {},
     AutoBuyGearEnabled = false,
@@ -48,6 +50,8 @@ local Settings = {
 EWEHUB:RegisterConfigField("LoopTime", function() return Settings.LoopTime end, function(v) Settings.LoopTime = v end)
 EWEHUB:RegisterConfigField("SelectedPlace", function() return Settings.SelectedPlace end, function(v) Settings.SelectedPlace = v end)
 EWEHUB:RegisterConfigField("SelectedFoodTray", function() return Settings.SelectedFoodTray end, function(v) Settings.SelectedFoodTray = v end)
+EWEHUB:RegisterConfigField("SelectedCrate", function() return Settings.SelectedCrate end, function(v) Settings.SelectedCrate = v end)
+EWEHUB:RegisterConfigField("SelectedEventItem", function() return Settings.SelectedEventItem end, function(v) Settings.SelectedEventItem = v end)
 EWEHUB:RegisterConfigField("SelectedGears", function() return Settings.SelectedGears end, function(v) Settings.SelectedGears = v end)
 EWEHUB:RegisterConfigField("SelectedBaits", function() return Settings.SelectedBaits end, function(v) Settings.SelectedBaits = v end)
 EWEHUB:RegisterConfigField("SelectedEggs", function() return Settings.SelectedEggs end, function(v) Settings.SelectedEggs = v end)
@@ -76,11 +80,20 @@ local DaftarEggs = {
 }
 
 local DaftarTravelingItems = {
-    "Zoo", "Wild", "Boba", "Punk", "PetTag", "Ashen"
+    "Zoo", "WildEgg", "BobaEgg", "Punk", "PetTag", "Ashen"
 }
 
 local DaftarCosmetics = {
     "AtlantisLightPole", "AtlantisBanner", "TridentThrone", "KingThrone", "PixelLilypad", "PixelLotus", "PixelTree", "PixelArcade", "CandyCane", "ChristmasLamp", "IceFishing", "SnowGlobe", "Snowman", "SantaChair", "ChristmasTree", "Minicano", "RunePillar", "AshFlame", "Dragon", "LavaThrone", "Cannon", "PirayeFlag", "CrowNest", "Tower", "FlowerBush", "EasterEgg", "MarshmallowCane", "MarshmallowTree", "MrBunny", "DinoEgg", "DinoSkull", "DinoBones", "JurrasicTree", "MoonLamp", "AlienSign", "GloShrooms", "AlienPod", "AlienLamp", "AlienTree", "UfoStatue", "LilyPad", "Bamboo", "ZenRocks", "JapaneseLantern", "ZenLantern", "BlossomTree", "ZenTower", "HeroSign", "HeroBush", "HeroBanner", "TallBuilding", "Building", "HeroBase", "Teloporter", "TikiTorch", "Leafy", "TallLeafy", "TikiTotem", "PalmTree", "TikiHut", "TikiHouse", "ShadowGrass", "ShadowShroom", "ShadowTorch", "ShadowQueen", "HoloBanner", "RobotAntena", "RobotLighpole", "LaunchPad", "MechStatue"
+}
+
+local DaftarCrates = {
+    "Nuke",
+    "Cartoon"
+}
+
+local DaftarEventItems = {
+    "Cartoon"
 }
 
 -- Updated Coordinates
@@ -92,6 +105,8 @@ local PlaceCoordinates = {
     ["5"] = Vector3.new(14.863998413085938, -0.012000083923339844, 14),
     ["6"] = Vector3.new(-135.13600158691406, -0.012000083923339844, 14)
 }
+
+local EventAreaCoordinate = Vector3.new(0.53, 9.65, 13.83)
 
 local function GetRemoteContainer()
     return game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include", 5):WaitForChild("node_modules", 5):WaitForChild("@rbxts", 5):WaitForChild("remo", 5):WaitForChild("src", 5):WaitForChild("container", 5)
@@ -120,7 +135,7 @@ local LoopTimeSlider = Tab1:CreateSlider({
 local HomePlaceDropdown = Tab1:CreateDropdown({
     Name = "Home Place",
     Options = {"1", "2", "3", "4", "5", "6"},
-    Default = "1",
+    Default = "",
     Multi = false,
     Flag = "HomePlaceDropdown",
     Callback = function(Selected) 
@@ -131,7 +146,7 @@ local HomePlaceDropdown = Tab1:CreateDropdown({
 local FoodTrayDropdown = Tab1:CreateDropdown({
     Name = "Select Food Tray",
     Options = {"SupremeFoodTray", "AdvancedFoodTray", "BasicFoodTray"},
-    Default = "SupremeFoodTray",
+    Default = "",
     Multi = false,
     Flag = "FoodTrayDropdown",
     Callback = function(Selected)
@@ -170,72 +185,91 @@ Tab1:CreateToggle({
 local TabEvent = Window:CreateTab({ 
     Name = "Event", 
     Icon = "⚡",
-    Notes = "Automatic event features to feed DrFallout, General, and open nukes."
+    Notes = "Automatic event features for opening crates and purchasing event items."
 })
 
-TabEvent:CreateToggle({
-    Name = "Feed DrFallout",
-    Default = false,
-    Flag = "FeedDrFalloutToggle",
-    Callback = function(Value)
-        Settings.FeedDrFalloutEnabled = Value
-        if Value then
-            task.spawn(function()
-                while Settings.FeedDrFalloutEnabled do
-                    pcall(function() 
-                        local container = GetRemoteContainer()
-                        if container and container:FindFirstChild("nuke.feedDrFalloutAll") then
-                            container["nuke.feedDrFalloutAll"]:FireServer() 
-                        end
-                    end)
-                    task.wait(Settings.LoopTime)
-                end
-            end)
-        end
+TabEvent:CreateButton({
+    Name = "Teleport to Event Area",
+    Callback = function()
+        pcall(function()
+            local player = game:GetService("Players").LocalPlayer
+            if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                player.Character.HumanoidRootPart.CFrame = CFrame.new(EventAreaCoordinate)
+            end
+        end)
+    end,
+})
+
+local CrateDropdown = TabEvent:CreateDropdown({
+    Name = "Select Crate",
+    Options = DaftarCrates,
+    Default = "",
+    Multi = false,
+    Flag = "CrateDropdown",
+    Callback = function(Selected)
+        Settings.SelectedCrate = Selected
     end,
 })
 
 TabEvent:CreateToggle({
-    Name = "Feed General",
+    Name = "Auto Open Crate",
     Default = false,
-    Flag = "FeedGeneralToggle",
+    Flag = "AutoOpenCrateToggle",
     Callback = function(Value)
-        Settings.FeedGeneralEnabled = Value
+        Settings.AutoOpenCrateEnabled = Value
         if Value then
             task.spawn(function()
-                while Settings.FeedGeneralEnabled do
-                    pcall(function() 
-                        local container = GetRemoteContainer()
-                        if container and container:FindFirstChild("nuke.feedGeneralChadAll") then
-                            container["nuke.feedGeneralChadAll"]:FireServer() 
-                        end
-                    end)
-                    task.wait(Settings.LoopTime)
-                end
-            end)
-        end
-    end,
-})
-
-TabEvent:CreateToggle({
-    Name = "Auto Open Nuke",
-    Default = false,
-    Flag = "AutoOpenNukeToggle",
-    Callback = function(Value)
-        Settings.AutoOpenNukeEnabled = Value
-        if Value then
-            task.spawn(function()
-                local args = {
-                    [1] = "Nuke:normal"
-                }
-                while Settings.AutoOpenNukeEnabled do
-                    pcall(function() 
-                        local container = GetRemoteContainer()
-                        if container and container:FindFirstChild("store.openBaitPack") then
-                            container["store.openBaitPack"]:FireServer(unpack(args)) 
-                        end
-                    end)
+                while Settings.AutoOpenCrateEnabled do
+                    if Settings.SelectedCrate ~= "" then
+                        local args = {
+                            [1] = Settings.SelectedCrate .. ":normal"
+                        }
+                        pcall(function() 
+                            local container = GetRemoteContainer()
+                            if container and container:FindFirstChild("store.openBaitPack") then
+                                container["store.openBaitPack"]:FireServer(unpack(args)) 
+                            end
+                        end)
+                    end
                     task.wait(12)
+                end
+            end)
+        end
+    end,
+})
+
+local EventItemDropdown = TabEvent:CreateDropdown({
+    Name = "Select Event Item",
+    Options = DaftarEventItems,
+    Default = "",
+    Multi = false,
+    Flag = "EventItemDropdown",
+    Callback = function(Selected)
+        Settings.SelectedEventItem = Selected
+    end,
+})
+
+TabEvent:CreateToggle({
+    Name = "Auto Buy Event Item",
+    Default = false,
+    Flag = "AutoBuyEventItemToggle",
+    Callback = function(Value)
+        Settings.AutoBuyEventItemEnabled = Value
+        if Value then
+            task.spawn(function()
+                while Settings.AutoBuyEventItemEnabled do
+                    if Settings.SelectedEventItem ~= "" then
+                        local args = {
+                            [1] = "baitpack:" .. Settings.SelectedEventItem
+                        }
+                        pcall(function() 
+                            local container = GetRemoteContainer()
+                            if container and container:FindFirstChild("shop.purchaseEventItem") then
+                                container["shop.purchaseEventItem"]:FireServer(unpack(args)) 
+                            end
+                        end)
+                    end
+                    task.wait(Settings.LoopTime)
                 end
             end)
         end
@@ -378,7 +412,7 @@ TabEgg:CreateToggle({
 })
 
 -- ==========================================
--- TAB 6: TRAVMERCH
+-- TAB 6: TRAVELING MERCHANT
 -- ==========================================
 local TabTraveling = Window:CreateTab({ 
     Name = "TravMerch", 
@@ -398,7 +432,7 @@ local TravelingDropdownUI = TabTraveling:CreateDropdown({
 })
 
 TabTraveling:CreateToggle({
-    Name = "Auto Buy TravMerch",
+    Name = "Auto Buy Traveling Merchant",
     Default = false,
     Flag = "AutoBuyTravelingToggle",
     Callback = function(Value)
@@ -423,7 +457,7 @@ TabTraveling:CreateToggle({
 })
 
 -- ==========================================
--- TAB 7: COSMERCH
+-- TAB 7: COSMETIC MERCHANT
 -- ==========================================
 local TabCosmetic = Window:CreateTab({ 
     Name = "CosMerch", 
@@ -443,7 +477,7 @@ local CosmeticDropdownUI = TabCosmetic:CreateDropdown({
 })
 
 TabCosmetic:CreateToggle({
-    Name = "Auto Buy CosMerch",
+    Name = "Auto Buy Cosmetic",
     Default = false,
     Flag = "AutoBuyCosmeticToggle",
     Callback = function(Value)
