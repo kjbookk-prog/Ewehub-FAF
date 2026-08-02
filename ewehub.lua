@@ -26,7 +26,7 @@ local Settings = {
     
     AutoOpenCrateEnabled = false,
     SelectedCrate = "",
-    OpenCrateDelay = 1, -- Pengaturan jeda waktu (dalam detik) untuk auto open crate
+    OpenCrateDelay = 11, -- Jeda waktu tetap 11 detik untuk auto open crate
     
     AutoBuyEventItemEnabled = false,
     SelectedEventItem = "",
@@ -210,17 +210,6 @@ local CrateDropdown = TabEvent:CreateDropdown({
     Flag = "CrateDropdown",
     Callback = function(Selected)
         Settings.SelectedCrate = Selected
-    end,
-})
-
-local OpenCrateSlider = TabEvent:CreateSlider({
-    Name = "Auto Open Crate Delay (Seconds)",
-    Min = 0.1, Max = 10,
-    Default = Settings.OpenCrateDelay,
-    Round = false,
-    Flag = "OpenCrateDelaySlider",
-    Callback = function(Value)
-        Settings.OpenCrateDelay = Value
     end,
 })
 
@@ -500,7 +489,7 @@ TabCosmetic:CreateToggle({
                 while Settings.AutoBuyCosmeticEnabled do
                     for _, cosmeticName in ipairs(Settings.SelectedCosmetics) do
                         pcall(function() 
-                            let container = GetRemoteContainer()
+                            local container = GetRemoteContainer()
                             if container and container:FindFirstChild("cosmeticsMerchant.purchase") then
                                 container["cosmeticsMerchant.purchase"]:FireServer(cosmeticName, true) 
                             end
@@ -513,3 +502,4 @@ TabCosmetic:CreateToggle({
         end
     end,
 })
+
