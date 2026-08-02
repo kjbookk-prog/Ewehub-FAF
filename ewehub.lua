@@ -26,6 +26,7 @@ local Settings = {
     
     AutoOpenCrateEnabled = false,
     SelectedCrate = "",
+    OpenCrateDelay = 1, -- Pengaturan jeda waktu (dalam detik) untuk auto open crate
     
     AutoBuyEventItemEnabled = false,
     SelectedEventItem = "",
@@ -51,6 +52,7 @@ EWEHUB:RegisterConfigField("LoopTime", function() return Settings.LoopTime end, 
 EWEHUB:RegisterConfigField("SelectedPlace", function() return Settings.SelectedPlace end, function(v) Settings.SelectedPlace = v end)
 EWEHUB:RegisterConfigField("SelectedFoodTray", function() return Settings.SelectedFoodTray end, function(v) Settings.SelectedFoodTray = v end)
 EWEHUB:RegisterConfigField("SelectedCrate", function() return Settings.SelectedCrate end, function(v) Settings.SelectedCrate = v end)
+EWEHUB:RegisterConfigField("OpenCrateDelay", function() return Settings.OpenCrateDelay end, function(v) Settings.OpenCrateDelay = v end)
 EWEHUB:RegisterConfigField("SelectedEventItem", function() return Settings.SelectedEventItem end, function(v) Settings.SelectedEventItem = v end)
 EWEHUB:RegisterConfigField("SelectedGears", function() return Settings.SelectedGears end, function(v) Settings.SelectedGears = v end)
 EWEHUB:RegisterConfigField("SelectedBaits", function() return Settings.SelectedBaits end, function(v) Settings.SelectedBaits = v end)
@@ -211,6 +213,17 @@ local CrateDropdown = TabEvent:CreateDropdown({
     end,
 })
 
+local OpenCrateSlider = TabEvent:CreateSlider({
+    Name = "Auto Open Crate Delay (Seconds)",
+    Min = 0.1, Max = 10,
+    Default = Settings.OpenCrateDelay,
+    Round = false,
+    Flag = "OpenCrateDelaySlider",
+    Callback = function(Value)
+        Settings.OpenCrateDelay = Value
+    end,
+})
+
 TabEvent:CreateToggle({
     Name = "Auto Open Crate",
     Default = false,
@@ -231,7 +244,7 @@ TabEvent:CreateToggle({
                             end
                         end)
                     end
-                    task.wait(12)
+                    task.wait(Settings.OpenCrateDelay)
                 end
             end)
         end
@@ -487,7 +500,7 @@ TabCosmetic:CreateToggle({
                 while Settings.AutoBuyCosmeticEnabled do
                     for _, cosmeticName in ipairs(Settings.SelectedCosmetics) do
                         pcall(function() 
-                            local container = GetRemoteContainer()
+                            let container = GetRemoteContainer()
                             if container and container:FindFirstChild("cosmeticsMerchant.purchase") then
                                 container["cosmeticsMerchant.purchase"]:FireServer(cosmeticName, true) 
                             end
@@ -500,4 +513,3 @@ TabCosmetic:CreateToggle({
         end
     end,
 })
-
