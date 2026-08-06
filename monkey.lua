@@ -34,16 +34,16 @@ local World2Locations = {
 }
 
 local World3Locations = {
-    { Name = "w3 cp 1", Position = Vector3.new() },
-    { Name = "w3 cp 2", Position = Vector3.new() },
-    { Name = "w3 cp 3", Position = Vector3.new() },
-    { Name = "w3 cp 4", Position = Vector3.new() },
-    { Name = "w3 cp 5", Position = Vector3.new() },
-    { Name = "w3 cp 6", Position = Vector3.new() },
-    { Name = "w3 cp 7", Position = Vector3.new() },
-    { Name = "w3 cp 8", Position = Vector3.new() },
-    { Name = "w3 cp 9", Position = Vector3.new() },
-    { Name = "w3 cp 10", Position = Vector3.new() }
+    { Name = "w3 cp 1", Position = Vector3.new(-696.35, 24.29, 2775.28) },
+    { Name = "w3 cp 2", Position = Vector3.new(-956.48, 24.29, 2790.45) },
+    { Name = "w3 cp 3", Position = Vector3.new(-1303.27, 24.29, 2770.67) },
+    { Name = "w3 cp 4", Position = Vector3.new(-1698.80, 24.29, 2778.86) },
+    { Name = "w3 cp 5", Position = Vector3.new(-2248.62, 24.29, 2771.33) },
+    { Name = "w3 cp 6", Position = Vector3.new(-2248.62, 24.29, 2771.33) },
+    { Name = "w3 cp 7", Position = Vector3.new(-2579.24, 280.29, 2777.67) },
+    { Name = "w3 cp 8", Position = Vector3.new(-4211.23, 280.29, 2780.61) },
+    { Name = "w3 cp 9", Position = Vector3.new(-5425.62, 280.29, 2774.48) },
+    { Name = "w3 cp 10", Position = Vector3.new(-8081.90, 280.29, 2764.19) }
 }
 
 local World4Locations = {
