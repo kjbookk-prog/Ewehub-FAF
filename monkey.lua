@@ -17,16 +17,20 @@ local World1Locations = {
     { Name = "cp 5", Position = Vector3.new(-2191.47, 119.79, -221.63) },
     { Name = "cp 6", Position = Vector3.new(-3083.06, 119.79, -231.64) },
     { Name = "cp 7", Position = Vector3.new(-4323.19, 278.79, -214.20) },
-    { Name = "cp 8", Position = Vector3.new(-6171.71, 278.79, -222.52) },
-    { Name = "cp 9", Position = Vector3.new(0, 10, 0) },
-    { Name = "cp 10", Position = Vector3.new(0, 10, 0) },
-    { Name = "cp 11", Position = Vector3.new(0, 10, 0) },
-    { Name = "cp 12", Position = Vector3.new(0, 10, 0) },
+    { Name = "cp 8", Position = Vector3.new(-6171.71, 278.79, -222.52) }
 }
 
 local World2Locations = {
-    { Name = "Spawn World 2", Position = Vector3.new(1000, 10, 1000) },
-    { Name = "Shop World 2", Position = Vector3.new(1200, 15, 1050) }
+    { Name = "cp 1", Position = Vector3.new(-730.65, 24.79, 2529.23) },
+    { Name = "cp 2", Position = Vector3.new(-1102.74, 39.79, 2530.69) },
+    { Name = "cp 3", Position = Vector3.new(-1891.53, 50.21, -2531.25) },
+    { Name = "cp 4", Position = Vector3.new(-2420.33, 57.09, -2539.82) },
+    { Name = "cp 5", Position = Vector3.new(-3260.11, 57.09, -2534.85) },
+    { Name = "cp 6", Position = Vector3.new(-3636.08, 57.08, -3708.64) },
+    { Name = "cp 7", Position = Vector3.new(-3639.07, 57.08, -4619.43) },
+    { Name = "cp 8", Position = Vector3.new(-3632.12, 57.09, -4625.34) },
+    { Name = "cp 9", Position = Vector3.new(-3643.54, 57.08, -5831.49) },
+    { Name = "cp 10", Position = Vector3.new(-3635.07, 153.09, -9383.25) }
 }
 
 local World3Locations = {
