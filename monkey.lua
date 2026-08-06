@@ -47,16 +47,12 @@ local World3Locations = {
 }
 
 local World4Locations = {
-    { Name = "w4 cp 1", Position = Vector3.new() },
-    { Name = "w4 cp 2", Position = Vector3.new() },
-    { Name = "w4 cp 3", Position = Vector3.new() },
-    { Name = "w4 cp 4", Position = Vector3.new() },
-    { Name = "w4 cp 5", Position = Vector3.new() },
-    { Name = "w4 cp 6", Position = Vector3.new() },
-    { Name = "w4 cp 7", Position = Vector3.new() },
-    { Name = "w4 cp 8", Position = Vector3.new() },
-    { Name = "w4 cp 9", Position = Vector3.new() },
-    { Name = "w4 cp 10", Position = Vector3.new() }
+    { Name = "w4 cp 1", Position = Vector3.new(-691.90, 24.29, 5773.07) },
+    { Name = "w4 cp 2", Position = Vector3.new(-892.58, 24.29, 5776.65) },
+    { Name = "w4 cp 3", Position = Vector3.new(-1205.05, 24.29, 5774.31) },
+    { Name = "w4 cp 4", Position = Vector3.new(-1599.13, 24.29, 5771.40) },
+    { Name = "w4 cp 5", Position = Vector3.new(-1864.72, 174.29, 5769.39) },
+    { Name = "w4 cp 6", Position = Vector3.new(-2709.29, 174.19, 5773.21) }
 }
 
 -- Data Table untuk Custom Locations (Disimpan permanen)
