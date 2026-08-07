@@ -55,6 +55,7 @@ local World4Locations = {
     { Name = "w4 cp 6", Position = Vector3.new(-2709.29, 174.19, 5773.21) },
     { Name = "w4 cp 7", Position = Vector3.new() },
     { Name = "w4 cp 8", Position = Vector3.new() },
+    { Name = "w4 cp 6", Position = Vector3.new() }
 }
 
 -- Data Table untuk Custom Locations (Disimpan permanen)
