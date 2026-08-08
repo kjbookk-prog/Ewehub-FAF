@@ -60,8 +60,13 @@ EWEHUB:RegisterConfigField("SelectedEggs", function() return Settings.SelectedEg
 EWEHUB:RegisterConfigField("SelectedTravelingItems", function() return Settings.SelectedTravelingItems end, function(v) Settings.SelectedTravelingItems = v end)
 EWEHUB:RegisterConfigField("SelectedCosmetics", function() return Settings.SelectedCosmetics end, function(v) Settings.SelectedCosmetics = v end)
 
--- ITEM NAME LISTS 
-local DaftarGears = {
+-- ==========================================
+-- ITEM NAME LISTS (REAL & DISPLAY MAPPING)
+-- *Ubah teks di bagian Daftar...Display sesuai keinginan Anda*
+-- ==========================================
+
+-- GEARS (Contoh: Beberapa diubah nama display-nya)
+local DaftarGearsReal = {
     "BasicAutoFeeder", "FoodScoop", "BasicFoodTray", "NetMover", 
     "MagnifyingGlass", "AdvancedFoodTray", "AdvancedAutoFeeder", 
     "XpCookie", "SupremeFoodTray", "TeleportWand", "StarLock", "SupremeAutoFeeder", 
@@ -69,33 +74,69 @@ local DaftarGears = {
     "GoldenCookie", "MutationBeacon", "EggIncubator", 
     "ExtremeAutoFeeder", "StormHorn", "GodlyAutoFeeder"
 } 
+local DaftarGearsDisplay = {
+    "Auto Feeder Basic", "Food Scoop", "Basic Food Tray", "Move Tool", 
+    "Magnifying Glass", "Advanced Food Tray", "Advanced Auto Feeder", 
+    "Xp Cookie", "Supreme Food Tray", "Teleport Wand", "Star Lock", "Supreme Auto Feeder", 
+    "Pet Toy", "Trading Ticket", "Egg Hatcher", "Pet Whistle", 
+    "Golden Cookie", "Mutation Beacon", "Egg Incubator", 
+    "Extreme Auto Feeder", "Storm Horn", "Godly Auto Feeder"
+}
 
-local DaftarBaits = {
+-- BAITS (Maja diubah jadi Maw di Display)
+local DaftarBaitsReal = {
     "Starter", "Novice", "Reef", "DeepSea", "Koi", "River", 
     "Puffer", "Glo", "Seal", "Ray", "Octopus", "Axolotl", 
     "Jelly", "Whale", "Shark", "Squid", "Megalodon", 
     "Kraken", "Maja", "Bloop", "OceanEater", "Serpent", "DoomRex"
 }
+local DaftarBaitsDisplay = {
+    "Starter", "Novice", "Reef", "DeepSea", "Koi", "River", 
+    "Puffer", "Glo", "Seal", "Ray", "Octopus", "Axolotl", 
+    "Jelly", "Whale", "Shark", "Squid", "Megalodon", 
+    "Kraken", "Maw", "Bloop", "OceanEater", "Serpent", "DoomRex"
+}
 
-local DaftarEggs = {
+-- EGGS (Contoh: Starter diubah jadi Telur Awal)
+local DaftarEggsReal = {
     "Starter", "Basic", "Forest", "Polar", "Tropical", "Exotic"
 }
-
-local DaftarTravelingItems = {
-    "Zoo", "WildEgg", "BobaEgg", "Punk", "PetTag", "Ashen"
+local DaftarEggsDisplay = {
+    "starter", "Basic", "Forest", "Polar", "Tropical", "Exotic"
 }
 
-local DaftarCosmetics = {
+-- TRAVELING ITEMS
+local DaftarTravelingItemsReal = {
+    "Zoo", "Wild", "Boba", "Punk", "PetTag", "Ashen"
+}
+local DaftarTravelingItemsDisplay = {
+    "Zoo", "Wild Egg", "Boba Egg", "Punk", "Pet Tag", "Ashen"
+}
+
+-- COSMETICS
+local DaftarCosmeticsReal = {
+    "AtlantisLightPole", "AtlantisBanner", "TridentThrone", "KingThrone", "PixelLilypad", "PixelLotus", "PixelTree", "PixelArcade", "CandyCane", "ChristmasLamp", "IceFishing", "SnowGlobe", "Snowman", "SantaChair", "ChristmasTree", "Minicano", "RunePillar", "AshFlame", "Dragon", "LavaThrone", "Cannon", "PirayeFlag", "CrowNest", "Tower", "FlowerBush", "EasterEgg", "MarshmallowCane", "MarshmallowTree", "MrBunny", "DinoEgg", "DinoSkull", "DinoBones", "JurrasicTree", "MoonLamp", "AlienSign", "GloShrooms", "AlienPod", "AlienLamp", "AlienTree", "UfoStatue", "LilyPad", "Bamboo", "ZenRocks", "JapaneseLantern", "ZenLantern", "BlossomTree", "ZenTower", "HeroSign", "HeroBush", "HeroBanner", "TallBuilding", "Building", "HeroBase", "Teloporter", "TikiTorch", "Leafy", "TallLeafy", "TikiTotem", "PalmTree", "TikiHut", "TikiHouse", "ShadowGrass", "ShadowShroom", "ShadowTorch", "ShadowQueen", "HoloBanner", "RobotAntena", "RobotLighpole", "LaunchPad", "MechStatue"
+}
+local DaftarCosmeticsDisplay = {
     "AtlantisLightPole", "AtlantisBanner", "TridentThrone", "KingThrone", "PixelLilypad", "PixelLotus", "PixelTree", "PixelArcade", "CandyCane", "ChristmasLamp", "IceFishing", "SnowGlobe", "Snowman", "SantaChair", "ChristmasTree", "Minicano", "RunePillar", "AshFlame", "Dragon", "LavaThrone", "Cannon", "PirayeFlag", "CrowNest", "Tower", "FlowerBush", "EasterEgg", "MarshmallowCane", "MarshmallowTree", "MrBunny", "DinoEgg", "DinoSkull", "DinoBones", "JurrasicTree", "MoonLamp", "AlienSign", "GloShrooms", "AlienPod", "AlienLamp", "AlienTree", "UfoStatue", "LilyPad", "Bamboo", "ZenRocks", "JapaneseLantern", "ZenLantern", "BlossomTree", "ZenTower", "HeroSign", "HeroBush", "HeroBanner", "TallBuilding", "Building", "HeroBase", "Teloporter", "TikiTorch", "Leafy", "TallLeafy", "TikiTotem", "PalmTree", "TikiHut", "TikiHouse", "ShadowGrass", "ShadowShroom", "ShadowTorch", "ShadowQueen", "HoloBanner", "RobotAntena", "RobotLighpole", "LaunchPad", "MechStatue"
 }
 
-local DaftarCrates = {
+-- CRATES
+local DaftarCratesReal = {
+    "Nuke",
+    "Cartoon"
+}
+local DaftarCratesDisplay = {
     "Nuke",
     "Cartoon"
 }
 
-local DaftarEventItems = {
+-- EVENT ITEMS
+local DaftarEventItemsReal = {
     "Cartoon", "egg:Cartoon"
+}
+local DaftarEventItemsDisplay = {
+    "Cartoon create", "Cartoon egg"
 }
 
 -- Updated Coordinates
@@ -112,6 +153,16 @@ local EventAreaCoordinate = Vector3.new(0.53, 9.65, 13.83)
 
 local function GetRemoteContainer()
     return game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include", 5):WaitForChild("node_modules", 5):WaitForChild("@rbxts", 5):WaitForChild("remo", 5):WaitForChild("src", 5):WaitForChild("container", 5)
+end
+
+-- Helper function untuk mencocokkan nama Display kembali ke nama Real
+local function GetRealName(displayName, displayList, realList)
+    for i, name in ipairs(displayList) do
+        if name == displayName then
+            return realList[i]
+        end
+    end
+    return displayName
 end
 
 -- ==========================================
@@ -204,12 +255,12 @@ TabEvent:CreateButton({
 
 local CrateDropdown = TabEvent:CreateDropdown({
     Name = "Select Crate",
-    Options = DaftarCrates,
+    Options = DaftarCratesDisplay,
     Default = "",
     Multi = false,
     Flag = "CrateDropdown",
     Callback = function(Selected)
-        Settings.SelectedCrate = Selected
+        Settings.SelectedCrate = GetRealName(Selected, DaftarCratesDisplay, DaftarCratesReal)
     end,
 })
 
@@ -242,12 +293,12 @@ TabEvent:CreateToggle({
 
 local EventItemDropdown = TabEvent:CreateDropdown({
     Name = "Select Event Item",
-    Options = DaftarEventItems,
+    Options = DaftarEventItemsDisplay,
     Default = "",
     Multi = false,
     Flag = "EventItemDropdown",
     Callback = function(Selected)
-        Settings.SelectedEventItem = Selected
+        Settings.SelectedEventItem = GetRealName(Selected, DaftarEventItemsDisplay, DaftarEventItemsReal)
     end,
 })
 
@@ -289,12 +340,16 @@ local TabGear = Window:CreateTab({
 
 local GearDropdownUI = TabGear:CreateDropdown({
     Name = "Select Gear (Stackable)",
-    Options = DaftarGears,
+    Options = DaftarGearsDisplay,
     Default = {},
     Multi = true,
     Flag = "GearDropdown",
     Callback = function(SelectedArray) 
-        Settings.SelectedGears = SelectedArray 
+        local realArray = {}
+        for _, dispName in ipairs(SelectedArray) do
+            table.insert(realArray, GetRealName(dispName, DaftarGearsDisplay, DaftarGearsReal))
+        end
+        Settings.SelectedGears = realArray 
     end,
 })
 
@@ -334,12 +389,16 @@ local TabBait = Window:CreateTab({
 
 local BaitDropdownUI = TabBait:CreateDropdown({
     Name = "Select Bait (Stackable)",
-    Options = DaftarBaits,
+    Options = DaftarBaitsDisplay,
     Default = {},
     Multi = true,
     Flag = "BaitDropdown",
     Callback = function(SelectedArray) 
-        Settings.SelectedBaits = SelectedArray 
+        local realArray = {}
+        for _, dispName in ipairs(SelectedArray) do
+            table.insert(realArray, GetRealName(dispName, DaftarBaitsDisplay, DaftarBaitsReal))
+        end
+        Settings.SelectedBaits = realArray 
     end,
 })
 
@@ -379,12 +438,16 @@ local TabEgg = Window:CreateTab({
 
 local EggDropdownUI = TabEgg:CreateDropdown({
     Name = "Select Egg (Stackable)",
-    Options = DaftarEggs,
+    Options = DaftarEggsDisplay,
     Default = {},
     Multi = true,
     Flag = "EggDropdown",
     Callback = function(SelectedArray) 
-        Settings.SelectedEggs = SelectedArray 
+        local realArray = {}
+        for _, dispName in ipairs(SelectedArray) do
+            table.insert(realArray, GetRealName(dispName, DaftarEggsDisplay, DaftarEggsReal))
+        end
+        Settings.SelectedEggs = realArray 
     end,
 })
 
@@ -424,12 +487,16 @@ local TabTraveling = Window:CreateTab({
 
 local TravelingDropdownUI = TabTraveling:CreateDropdown({
     Name = "Select Traveling Item (Stackable)",
-    Options = DaftarTravelingItems,
+    Options = DaftarTravelingItemsDisplay,
     Default = {},
     Multi = true,
     Flag = "TravelingDropdown",
     Callback = function(SelectedArray) 
-        Settings.SelectedTravelingItems = SelectedArray 
+        local realArray = {}
+        for _, dispName in ipairs(SelectedArray) do
+            table.insert(realArray, GetRealName(dispName, DaftarTravelingItemsDisplay, DaftarTravelingItemsReal))
+        end
+        Settings.SelectedTravelingItems = realArray 
     end,
 })
 
@@ -469,12 +536,16 @@ local TabCosmetic = Window:CreateTab({
 
 local CosmeticDropdownUI = TabCosmetic:CreateDropdown({
     Name = "Select Cosmetic (Stackable)",
-    Options = DaftarCosmetics,
+    Options = DaftarCosmeticsDisplay,
     Default = {},
     Multi = true,
     Flag = "CosmeticDropdown",
     Callback = function(SelectedArray) 
-        Settings.SelectedCosmetics = SelectedArray 
+        local realArray = {}
+        for _, dispName in ipairs(SelectedArray) do
+            table.insert(realArray, GetRealName(dispName, DaftarCosmeticsDisplay, DaftarCosmeticsReal))
+        end
+        Settings.SelectedCosmetics = realArray 
     end,
 })
 
@@ -502,4 +573,3 @@ TabCosmetic:CreateToggle({
         end
     end,
 })
-
