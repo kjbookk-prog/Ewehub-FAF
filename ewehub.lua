@@ -95,7 +95,7 @@ local DaftarCrates = {
 }
 
 local DaftarEventItems = {
-    "Cartoon"
+    "Cartoon", "egg:Cartoon"
 }
 
 -- Updated Coordinates
