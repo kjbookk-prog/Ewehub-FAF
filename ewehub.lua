@@ -31,6 +31,8 @@ local Settings = {
     AutoBuyEventItemEnabled = false,
     SelectedEventItem = "",
     
+    AutoFeedMrCrayonEnabled = false, -- Status untuk fitur baru Auto Feed Mr. Crayon
+    
     SelectedGears = {},
     AutoBuyGearEnabled = false,
     
@@ -54,6 +56,7 @@ EWEHUB:RegisterConfigField("SelectedFoodTray", function() return Settings.Select
 EWEHUB:RegisterConfigField("SelectedCrate", function() return Settings.SelectedCrate end, function(v) Settings.SelectedCrate = v end)
 EWEHUB:RegisterConfigField("OpenCrateDelay", function() return Settings.OpenCrateDelay end, function(v) Settings.OpenCrateDelay = v end)
 EWEHUB:RegisterConfigField("SelectedEventItem", function() return Settings.SelectedEventItem end, function(v) Settings.SelectedEventItem = v end)
+EWEHUB:RegisterConfigField("AutoFeedMrCrayonEnabled", function() return Settings.AutoFeedMrCrayonEnabled end, function(v) Settings.AutoFeedMrCrayonEnabled = v end)
 EWEHUB:RegisterConfigField("SelectedGears", function() return Settings.SelectedGears end, function(v) Settings.SelectedGears = v end)
 EWEHUB:RegisterConfigField("SelectedBaits", function() return Settings.SelectedBaits end, function(v) Settings.SelectedBaits = v end)
 EWEHUB:RegisterConfigField("SelectedEggs", function() return Settings.SelectedEggs end, function(v) Settings.SelectedEggs = v end)
@@ -62,10 +65,8 @@ EWEHUB:RegisterConfigField("SelectedCosmetics", function() return Settings.Selec
 
 -- ==========================================
 -- ITEM NAME LISTS (REAL & DISPLAY MAPPING)
--- *Ubah teks di bagian Daftar...Display sesuai keinginan Anda*
 -- ==========================================
 
--- GEARS (Contoh: Beberapa diubah nama display-nya)
 local DaftarGearsReal = {
     "BasicAutoFeeder", "FoodScoop", "BasicFoodTray", "NetMover", 
     "MagnifyingGlass", "AdvancedFoodTray", "AdvancedAutoFeeder", 
@@ -83,7 +84,6 @@ local DaftarGearsDisplay = {
     "Extreme Auto Feeder", "Storm Horn", "Godly Auto Feeder"
 }
 
--- BAITS (Maja diubah jadi Maw di Display)
 local DaftarBaitsReal = {
     "Starter", "Novice", "Reef", "DeepSea", "Koi", "River", 
     "Puffer", "Glo", "Seal", "Ray", "Octopus", "Axolotl", 
@@ -97,7 +97,6 @@ local DaftarBaitsDisplay = {
     "Kraken", "Maw", "Bloop", "OceanEater", "Serpent", "DoomRex"
 }
 
--- EGGS (Contoh: Starter diubah jadi Telur Awal)
 local DaftarEggsReal = {
     "Starter", "Basic", "Forest", "Polar", "Tropical", "Exotic"
 }
@@ -105,7 +104,6 @@ local DaftarEggsDisplay = {
     "starter", "Basic", "Forest", "Polar", "Tropical", "Exotic"
 }
 
--- TRAVELING ITEMS
 local DaftarTravelingItemsReal = {
     "Zoo", "Wild", "Boba", "Punk", "PetTag", "Ashen"
 }
@@ -113,15 +111,11 @@ local DaftarTravelingItemsDisplay = {
     "Zoo", "Wild Egg", "Boba Egg", "Punk", "Pet Tag", "Ashen"
 }
 
--- COSMETICS
 local DaftarCosmeticsReal = {
     "AtlantisLightPole", "AtlantisBanner", "TridentThrone", "KingThrone", "PixelLilypad", "PixelLotus", "PixelTree", "PixelArcade", "CandyCane", "ChristmasLamp", "IceFishing", "SnowGlobe", "Snowman", "SantaChair", "ChristmasTree", "Minicano", "RunePillar", "AshFlame", "Dragon", "LavaThrone", "Cannon", "PirayeFlag", "CrowNest", "Tower", "FlowerBush", "EasterEgg", "MarshmallowCane", "MarshmallowTree", "MrBunny", "DinoEgg", "DinoSkull", "DinoBones", "JurrasicTree", "MoonLamp", "AlienSign", "GloShrooms", "AlienPod", "AlienLamp", "AlienTree", "UfoStatue", "LilyPad", "Bamboo", "ZenRocks", "JapaneseLantern", "ZenLantern", "BlossomTree", "ZenTower", "HeroSign", "HeroBush", "HeroBanner", "TallBuilding", "Building", "HeroBase", "Teloporter", "TikiTorch", "Leafy", "TallLeafy", "TikiTotem", "PalmTree", "TikiHut", "TikiHouse", "ShadowGrass", "ShadowShroom", "ShadowTorch", "ShadowQueen", "HoloBanner", "RobotAntena", "RobotLighpole", "LaunchPad", "MechStatue"
 }
-local DaftarCosmeticsDisplay = {
-    "AtlantisLightPole", "AtlantisBanner", "TridentThrone", "KingThrone", "PixelLilypad", "PixelLotus", "PixelTree", "PixelArcade", "CandyCane", "ChristmasLamp", "IceFishing", "SnowGlobe", "Snowman", "SantaChair", "ChristmasTree", "Minicano", "RunePillar", "AshFlame", "Dragon", "LavaThrone", "Cannon", "PirayeFlag", "CrowNest", "Tower", "FlowerBush", "EasterEgg", "MarshmallowCane", "MarshmallowTree", "MrBunny", "DinoEgg", "DinoSkull", "DinoBones", "JurrasicTree", "MoonLamp", "AlienSign", "GloShrooms", "AlienPod", "AlienLamp", "AlienTree", "UfoStatue", "LilyPad", "Bamboo", "ZenRocks", "JapaneseLantern", "ZenLantern", "BlossomTree", "ZenTower", "HeroSign", "HeroBush", "HeroBanner", "TallBuilding", "Building", "HeroBase", "Teloporter", "TikiTorch", "Leafy", "TallLeafy", "TikiTotem", "PalmTree", "TikiHut", "TikiHouse", "ShadowGrass", "ShadowShroom", "ShadowTorch", "ShadowQueen", "HoloBanner", "RobotAntena", "RobotLighpole", "LaunchPad", "MechStatue"
-}
+local DaftarCosmeticsDisplay = DaftarCosmeticsReal
 
--- CRATES
 local DaftarCratesReal = {
     "Nuke",
     "Cartoon"
@@ -131,7 +125,6 @@ local DaftarCratesDisplay = {
     "Cartoon"
 }
 
--- EVENT ITEMS
 local DaftarEventItemsReal = {
     "Cartoon", "egg:Cartoon"
 }
@@ -139,7 +132,6 @@ local DaftarEventItemsDisplay = {
     "Cartoon create", "Cartoon egg"
 }
 
--- Updated Coordinates
 local PlaceCoordinates = {
     ["1"] = Vector3.new(-141.13600158691406, -0.012000083923339844, 361),
     ["2"] = Vector3.new(21.863998413085938, -0.012000083923339844, 306),
@@ -155,7 +147,6 @@ local function GetRemoteContainer()
     return game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include", 5):WaitForChild("node_modules", 5):WaitForChild("@rbxts", 5):WaitForChild("remo", 5):WaitForChild("src", 5):WaitForChild("container", 5)
 end
 
--- Helper function untuk mencocokkan nama Display kembali ke nama Real
 local function GetRealName(displayName, displayList, realList)
     for i, name in ipairs(displayList) do
         if name == displayName then
@@ -233,7 +224,7 @@ Tab1:CreateToggle({
 })
 
 -- ==========================================
--- TAB 2: EVENT
+-- TAB 2: EVENT (Urutan Baru Sesuai Permintaan)
 -- ==========================================
 local TabEvent = Window:CreateTab({ 
     Name = "Event", 
@@ -241,6 +232,7 @@ local TabEvent = Window:CreateTab({
     Notes = "Automatic event features for opening crates and purchasing event items."
 })
 
+-- 1. Teleport to Event Area
 TabEvent:CreateButton({
     Name = "Teleport to Event Area",
     Callback = function()
@@ -253,6 +245,69 @@ TabEvent:CreateButton({
     end,
 })
 
+-- 2. Ato Buy Item Event (Select Event Item & Auto Buy)
+local EventItemDropdown = TabEvent:CreateDropdown({
+    Name = "Select Event Item",
+    Options = DaftarEventItemsDisplay,
+    Default = "",
+    Multi = false,
+    Flag = "EventItemDropdown",
+    Callback = function(Selected)
+        Settings.SelectedEventItem = GetRealName(Selected, DaftarEventItemsDisplay, DaftarEventItemsReal)
+    end,
+})
+
+TabEvent:CreateToggle({
+    Name = "Ato Buy Item Event",
+    Default = false,
+    Flag = "AutoBuyEventItemToggle",
+    Callback = function(Value)
+        Settings.AutoBuyEventItemEnabled = Value
+        if Value then
+            task.spawn(function()
+                while Settings.AutoBuyEventItemEnabled do
+                    if Settings.SelectedEventItem ~= "" then
+                        local args = {
+                            [1] = "baitpack:" .. Settings.SelectedEventItem
+                        }
+                        pcall(function() 
+                            local container = GetRemoteContainer()
+                            if container and container:FindFirstChild("shop.purchaseEventItem") then
+                                container["shop.purchaseEventItem"]:FireServer(unpack(args)) 
+                            end
+                        end)
+                    end
+                    task.wait(Settings.LoopTime)
+                end
+            end)
+        end
+    end,
+})
+
+-- 3. Auto Feed Mr. Crayon (Fitur Baru)
+TabEvent:CreateToggle({
+    Name = "Auto Feed Mr. Crayon",
+    Default = false,
+    Flag = "AutoFeedMrCrayonToggle",
+    Callback = function(Value)
+        Settings.AutoFeedMrCrayonEnabled = Value
+        if Value then
+            task.spawn(function()
+                while Settings.AutoFeedMrCrayonEnabled do
+                    pcall(function()
+                        local container = GetRemoteContainer()
+                        if container and container:FindFirstChild("cartoon.feedMrCrayonAll") then
+                            container["cartoon.feedMrCrayonAll"]:FireServer()
+                        end
+                    end)
+                    task.wait(Settings.LoopTime)
+                end
+            end)
+        end
+    end,
+})
+
+-- 4. Auto Open Crate
 local CrateDropdown = TabEvent:CreateDropdown({
     Name = "Select Crate",
     Options = DaftarCratesDisplay,
@@ -285,44 +340,6 @@ TabEvent:CreateToggle({
                         end)
                     end
                     task.wait(Settings.OpenCrateDelay)
-                end
-            end)
-        end
-    end,
-})
-
-local EventItemDropdown = TabEvent:CreateDropdown({
-    Name = "Select Event Item",
-    Options = DaftarEventItemsDisplay,
-    Default = "",
-    Multi = false,
-    Flag = "EventItemDropdown",
-    Callback = function(Selected)
-        Settings.SelectedEventItem = GetRealName(Selected, DaftarEventItemsDisplay, DaftarEventItemsReal)
-    end,
-})
-
-TabEvent:CreateToggle({
-    Name = "Auto Buy Event Item",
-    Default = false,
-    Flag = "AutoBuyEventItemToggle",
-    Callback = function(Value)
-        Settings.AutoBuyEventItemEnabled = Value
-        if Value then
-            task.spawn(function()
-                while Settings.AutoBuyEventItemEnabled do
-                    if Settings.SelectedEventItem ~= "" then
-                        local args = {
-                            [1] = "baitpack:" .. Settings.SelectedEventItem
-                        }
-                        pcall(function() 
-                            local container = GetRemoteContainer()
-                            if container and container:FindFirstChild("shop.purchaseEventItem") then
-                                container["shop.purchaseEventItem"]:FireServer(unpack(args)) 
-                            end
-                        end)
-                    end
-                    task.wait(Settings.LoopTime)
                 end
             end)
         end
