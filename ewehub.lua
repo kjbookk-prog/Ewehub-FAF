@@ -1,18 +1,21 @@
--- Loading EWEHUB Library (v4.7.0)
-local EWEHUB = loadstring(game:HttpGet("https://raw.githubusercontent.com/kjbookk-prog/Ewhub-repo/refs/heads/main/Library-1.lua"))()
+-- Loading Obsidian Library & Addons
+local repo = "https://raw.githubusercontent.com/deividcomsono/Obsidian/main/"
+local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
+local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
+local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
 
-local Window = EWEHUB:CreateWindow({
-    Name = "EWEHUB | FAF",
-    ToggleKey = Enum.KeyCode.RightControl,
-    ForcePlayerGui = false,
-    Watermark = true,
-    Icon = "🚀",
-    Notes = "Press the Minimize button (—) to hide the window into a draggable floating round icon.",
-    Discord = {
-        Enabled = false,
-        Invite = "https://discord.gg/xxxx",
-        Interval = 300,
-    },
+local Options = Library.Options
+local Toggles = Library.Toggles
+
+Library.ForceCheckbox = false
+Library.ShowToggleFrameInKeybinds = true
+
+local Window = Library:CreateWindow({
+    Title = "EWEHUB | FAF",
+    Footer = "version: obsidian",
+    Icon = 95816097006870,
+    NotifySide = "Right",
+    ShowCustomCursor = true,
 })
 
 -- ==========================================
@@ -20,18 +23,24 @@ local Window = EWEHUB:CreateWindow({
 -- ==========================================
 local Settings = {
     LoopTime = 0.1, 
-    SelectedPlace = "",
-    SelectedFoodTray = "",
+    SelectedFoodTray = "SupremeFoodTray",
     AutoPlaceEnabled = false,
     
     AutoOpenCrateEnabled = false,
     SelectedCrate = "",
-    OpenCrateDelay = 11, -- Jeda waktu tetap 11 detik untuk auto open crate
+    OpenCrateDelay = 11,
     
     AutoBuyEventItemEnabled = false,
     SelectedEventItem = "",
     
-    AutoFeedMrCrayonEnabled = false, -- Status untuk fitur baru Auto Feed Mr. Crayon
+    FloatingTeleportEnabled = false,
+    FloatingSellEnabled = false,
+    
+    AutoSubmitBee1 = false,
+    AutoSubmitBee2 = false,
+    AutoSubmitBee3 = false,
+    
+    AutoSellFishEnabled = false,
     
     SelectedGears = {},
     AutoBuyGearEnabled = false,
@@ -49,24 +58,9 @@ local Settings = {
     AutoBuyCosmeticEnabled = false
 }
 
--- Register custom variables to the v4.7.0 config system to save & load properly
-EWEHUB:RegisterConfigField("LoopTime", function() return Settings.LoopTime end, function(v) Settings.LoopTime = v end)
-EWEHUB:RegisterConfigField("SelectedPlace", function() return Settings.SelectedPlace end, function(v) Settings.SelectedPlace = v end)
-EWEHUB:RegisterConfigField("SelectedFoodTray", function() return Settings.SelectedFoodTray end, function(v) Settings.SelectedFoodTray = v end)
-EWEHUB:RegisterConfigField("SelectedCrate", function() return Settings.SelectedCrate end, function(v) Settings.SelectedCrate = v end)
-EWEHUB:RegisterConfigField("OpenCrateDelay", function() return Settings.OpenCrateDelay end, function(v) Settings.OpenCrateDelay = v end)
-EWEHUB:RegisterConfigField("SelectedEventItem", function() return Settings.SelectedEventItem end, function(v) Settings.SelectedEventItem = v end)
-EWEHUB:RegisterConfigField("AutoFeedMrCrayonEnabled", function() return Settings.AutoFeedMrCrayonEnabled end, function(v) Settings.AutoFeedMrCrayonEnabled = v end)
-EWEHUB:RegisterConfigField("SelectedGears", function() return Settings.SelectedGears end, function(v) Settings.SelectedGears = v end)
-EWEHUB:RegisterConfigField("SelectedBaits", function() return Settings.SelectedBaits end, function(v) Settings.SelectedBaits = v end)
-EWEHUB:RegisterConfigField("SelectedEggs", function() return Settings.SelectedEggs end, function(v) Settings.SelectedEggs = v end)
-EWEHUB:RegisterConfigField("SelectedTravelingItems", function() return Settings.SelectedTravelingItems end, function(v) Settings.SelectedTravelingItems = v end)
-EWEHUB:RegisterConfigField("SelectedCosmetics", function() return Settings.SelectedCosmetics end, function(v) Settings.SelectedCosmetics = v end)
-
 -- ==========================================
--- ITEM NAME LISTS (REAL & DISPLAY MAPPING)
+-- ITEM NAME LISTS
 -- ==========================================
-
 local DaftarGearsReal = {
     "BasicAutoFeeder", "FoodScoop", "BasicFoodTray", "NetMover", 
     "MagnifyingGlass", "AdvancedFoodTray", "AdvancedAutoFeeder", 
@@ -97,51 +91,25 @@ local DaftarBaitsDisplay = {
     "Kraken", "Maw", "Bloop", "OceanEater", "Serpent", "DoomRex"
 }
 
-local DaftarEggsReal = {
-    "Starter", "Basic", "Forest", "Polar", "Tropical", "Exotic"
-}
-local DaftarEggsDisplay = {
-    "starter", "Basic", "Forest", "Polar", "Tropical", "Exotic"
-}
+local DaftarEggsReal = { "Starter", "Basic", "Forest", "Polar", "Tropical", "Exotic" }
+local DaftarEggsDisplay = { "starter", "Basic", "Forest", "Polar", "Tropical", "Exotic" }
 
-local DaftarTravelingItemsReal = {
-    "Zoo", "Wild", "Boba", "Punk", "PetTag", "Ashen"
-}
-local DaftarTravelingItemsDisplay = {
-    "Zoo", "Wild Egg", "Boba Egg", "Punk", "Pet Tag", "Ashen"
-}
+local DaftarTravelingItemsReal = { "Zoo", "Wild", "Boba", "Punk", "PetTag", "Ashen" }
+local DaftarTravelingItemsDisplay = { "Zoo", "Wild Egg", "Boba Egg", "Punk", "Pet Tag", "Ashen" }
 
 local DaftarCosmeticsReal = {
     "AtlantisLightPole", "AtlantisBanner", "TridentThrone", "KingThrone", "PixelLilypad", "PixelLotus", "PixelTree", "PixelArcade", "CandyCane", "ChristmasLamp", "IceFishing", "SnowGlobe", "Snowman", "SantaChair", "ChristmasTree", "Minicano", "RunePillar", "AshFlame", "Dragon", "LavaThrone", "Cannon", "PirayeFlag", "CrowNest", "Tower", "FlowerBush", "EasterEgg", "MarshmallowCane", "MarshmallowTree", "MrBunny", "DinoEgg", "DinoSkull", "DinoBones", "JurrasicTree", "MoonLamp", "AlienSign", "GloShrooms", "AlienPod", "AlienLamp", "AlienTree", "UfoStatue", "LilyPad", "Bamboo", "ZenRocks", "JapaneseLantern", "ZenLantern", "BlossomTree", "ZenTower", "HeroSign", "HeroBush", "HeroBanner", "TallBuilding", "Building", "HeroBase", "Teloporter", "TikiTorch", "Leafy", "TallLeafy", "TikiTotem", "PalmTree", "TikiHut", "TikiHouse", "ShadowGrass", "ShadowShroom", "ShadowTorch", "ShadowQueen", "HoloBanner", "RobotAntena", "RobotLighpole", "LaunchPad", "MechStatue"
 }
 local DaftarCosmeticsDisplay = DaftarCosmeticsReal
 
-local DaftarCratesReal = {
-    "Nuke",
-    "Cartoon"
-}
-local DaftarCratesDisplay = {
-    "Nuke",
-    "Cartoon"
-}
+local DaftarCratesReal = { "Nuke", "Cartoon", "Bee"}
+local DaftarCratesDisplay = { "Nuke", "Cartoon", "Bee"}
 
-local DaftarEventItemsReal = {
-    "Cartoon", "egg:Cartoon"
-}
-local DaftarEventItemsDisplay = {
-    "Cartoon create", "Cartoon egg"
-}
-
-local PlaceCoordinates = {
-    ["1"] = Vector3.new(-141.13600158691406, -0.012000083923339844, 361),
-    ["2"] = Vector3.new(21.863998413085938, -0.012000083923339844, 306),
-    ["3"] = Vector3.new(16.863998413085938, -0.012000083923339844, 127),
-    ["4"] = Vector3.new(-135.13600158691406, -0.012000083923339844, 125),
-    ["5"] = Vector3.new(14.863998413085938, -0.012000083923339844, 14),
-    ["6"] = Vector3.new(-135.13600158691406, -0.012000083923339844, 14)
-}
+local DaftarEventItemsReal = { "baitpack:Bee"}
+local DaftarEventItemsDisplay = { "Bee create"}
 
 local EventAreaCoordinate = Vector3.new(0.53, 9.65, 13.83)
+local AutoPlaceTargetPosition = Vector3.new(67.86299896240234, -0.012000083923339844, -11)
 
 local function GetRemoteContainer()
     return game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include", 5):WaitForChild("node_modules", 5):WaitForChild("@rbxts", 5):WaitForChild("remo", 5):WaitForChild("src", 5):WaitForChild("container", 5)
@@ -157,147 +125,157 @@ local function GetRealName(displayName, displayList, realList)
 end
 
 -- ==========================================
--- TAB 1: AUTO PLACE
+-- FLOATING BUTTONS SYSTEM (TELEPORT & SELL)
 -- ==========================================
-local Tab1 = Window:CreateTab({ 
-    Name = "Auto Place", 
-    Icon = "🏠",
-    Notes = "Note: This feature is still under development and currently only works fully on Codex executor. Support for other executors is being worked on."
-})
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
 
-local LoopTimeSlider = Tab1:CreateSlider({
-    Name = "Loop Time (All Main Features)",
-    Min = 0.01, Max = 10,
+local FloatingGui = Instance.new("ScreenGui")
+FloatingGui.Name = "Obsidian_FloatingButtons"
+FloatingGui.Parent = CoreGui
+FloatingGui.ResetOnSpawn = false
+FloatingGui.Enabled = true
+
+local TeleButton = Instance.new("TextButton")
+TeleButton.Name = "TeleportButton"
+TeleButton.Parent = FloatingGui
+TeleButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+TeleButton.BorderColor3 = Color3.fromRGB(0, 170, 255)
+TeleButton.BorderSizePixel = 2
+TeleButton.Position = UDim2.new(0.1, 0, 0.2, 0)
+TeleButton.Size = UDim2.new(0, 55, 0, 55)
+TeleButton.Font = Enum.Font.SourceSansBold
+TeleButton.Text = "TELE"
+TeleButton.TextColor3 = Color3.fromRGB(0, 170, 255)
+TeleButton.TextSize = 14
+TeleButton.Visible = false
+
+local TeleCorner = Instance.new("UICorner")
+TeleCorner.CornerRadius = UDim.new(1, 0)
+TeleCorner.Parent = TeleButton
+
+TeleButton.MouseButton1Click:Connect(function()
+    pcall(function()
+        if LocalPlayer and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(EventAreaCoordinate)
+        end
+    end)
+end)
+
+local SellButton = Instance.new("TextButton")
+SellButton.Name = "SellButton"
+SellButton.Parent = FloatingGui
+SellButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+SellButton.BorderColor3 = Color3.fromRGB(255, 170, 0)
+SellButton.BorderSizePixel = 2
+SellButton.Position = UDim2.new(0.1, 0, 0.32, 0)
+SellButton.Size = UDim2.new(0, 55, 0, 55)
+SellButton.Font = Enum.Font.SourceSansBold
+SellButton.Text = "SELL"
+SellButton.TextColor3 = Color3.fromRGB(255, 170, 0)
+SellButton.TextSize = 14
+SellButton.Visible = false
+
+local SellCorner = Instance.new("UICorner")
+SellCorner.CornerRadius = UDim.new(1, 0)
+SellCorner.Parent = SellButton
+
+-- Floating Sell Button menggunakan remote update (sellFish.sellAllFish)
+SellButton.MouseButton1Click:Connect(function()
+    pcall(function()
+        local container = GetRemoteContainer()
+        if container and container:FindFirstChild("sellFish.sellAllFish") then
+            container["sellFish.sellAllFish"]:FireServer()
+        end
+    end)
+end)
+
+local UserInputService = game:GetService("UserInputService")
+local function MakeDraggable(btn)
+    local dragging, dragInput, dragStart, startPos
+    btn.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = btn.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+    btn.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            local delta = input.Position - dragStart
+            btn.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+end
+MakeDraggable(TeleButton)
+MakeDraggable(SellButton)
+
+-- ==========================================
+-- TABS & GROUPBOXES SETUP
+-- ==========================================
+local Tabs = {
+    AutoPlace = Window:AddTab("Auto Place", "home"),
+    Event = Window:AddTab("Event", "zap"),
+    Shop = Window:AddTab("Shop", "shopping-bag"),
+    Merch = Window:AddTab("Merch", "store"),
+    ["UI Settings"] = Window:AddTab("UI Settings", "settings"),
+}
+
+-- ==========================================
+-- TAB 1: AUTO PLACE 
+-- ==========================================
+local LeftGroupAutoPlace = Tabs.AutoPlace:AddLeftGroupbox("Auto Place Settings", "settings")
+local RightGroupDiscord = Tabs.AutoPlace:AddRightGroupbox("Community & Support", "users")
+
+LeftGroupAutoPlace:AddSlider("LoopTimeSlider", {
+    Text = "Loop Time (All Main Features)",
     Default = Settings.LoopTime,
-    Round = false,
-    Flag = "LoopTimeSlider",
+    Min = 0.01,
+    Max = 300,
+    Rounding = 2,
     Callback = function(Value) 
         Settings.LoopTime = Value 
     end,
 })
 
-local HomePlaceDropdown = Tab1:CreateDropdown({
-    Name = "Home Place",
-    Options = {"1", "2", "3", "4", "5", "6"},
-    Default = "",
+LeftGroupAutoPlace:AddDropdown("FoodTrayDropdown", {
+    Values = {"SupremeFoodTray", "AdvancedFoodTray", "BasicFoodTray"},
+    Default = 1,
     Multi = false,
-    Flag = "HomePlaceDropdown",
-    Callback = function(Selected) 
-        Settings.SelectedPlace = Selected 
-    end,
-})
-
-local FoodTrayDropdown = Tab1:CreateDropdown({
-    Name = "Select Food Tray",
-    Options = {"SupremeFoodTray", "AdvancedFoodTray", "BasicFoodTray"},
-    Default = "",
-    Multi = false,
-    Flag = "FoodTrayDropdown",
+    Text = "Select Food Tray",
     Callback = function(Selected)
         Settings.SelectedFoodTray = Selected
     end,
 })
 
-Tab1:CreateToggle({
-    Name = "Start Auto Place",
+LeftGroupAutoPlace:AddToggle("AutoPlaceToggle", {
+    Text = "Start Auto Place",
     Default = false,
-    Flag = "AutoPlaceToggle",
     Callback = function(Value)
         Settings.AutoPlaceEnabled = Value
         if Value then
             task.spawn(function()
                 while Settings.AutoPlaceEnabled do
-                    local pos = PlaceCoordinates[Settings.SelectedPlace]
-                    if pos then
-                        pcall(function() 
-                            local container = GetRemoteContainer()
-                            if container and container:FindFirstChild("ponds.placeBuilding") then
-                                container["ponds.placeBuilding"]:InvokeServer("booster", Settings.SelectedFoodTray, pos)
-                            end
-                        end)
-                    end
-                    task.wait(Settings.LoopTime)
-                end
-            end)
-        end
-    end,
-})
-
--- ==========================================
--- TAB 2: EVENT (Urutan Baru Sesuai Permintaan)
--- ==========================================
-local TabEvent = Window:CreateTab({ 
-    Name = "Event", 
-    Icon = "⚡",
-    Notes = "Automatic event features for opening crates and purchasing event items."
-})
-
--- 1. Teleport to Event Area
-TabEvent:CreateButton({
-    Name = "Teleport to Event Area",
-    Callback = function()
-        pcall(function()
-            local player = game:GetService("Players").LocalPlayer
-            if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-                player.Character.HumanoidRootPart.CFrame = CFrame.new(EventAreaCoordinate)
-            end
-        end)
-    end,
-})
-
--- 2. Ato Buy Item Event (Select Event Item & Auto Buy)
-local EventItemDropdown = TabEvent:CreateDropdown({
-    Name = "Select Event Item",
-    Options = DaftarEventItemsDisplay,
-    Default = "",
-    Multi = false,
-    Flag = "EventItemDropdown",
-    Callback = function(Selected)
-        Settings.SelectedEventItem = GetRealName(Selected, DaftarEventItemsDisplay, DaftarEventItemsReal)
-    end,
-})
-
-TabEvent:CreateToggle({
-    Name = "Ato Buy Item Event",
-    Default = false,
-    Flag = "AutoBuyEventItemToggle",
-    Callback = function(Value)
-        Settings.AutoBuyEventItemEnabled = Value
-        if Value then
-            task.spawn(function()
-                while Settings.AutoBuyEventItemEnabled do
-                    if Settings.SelectedEventItem ~= "" then
-                        local args = {
-                            [1] = "baitpack:" .. Settings.SelectedEventItem
-                        }
-                        pcall(function() 
-                            local container = GetRemoteContainer()
-                            if container and container:FindFirstChild("shop.purchaseEventItem") then
-                                container["shop.purchaseEventItem"]:FireServer(unpack(args)) 
-                            end
-                        end)
-                    end
-                    task.wait(Settings.LoopTime)
-                end
-            end)
-        end
-    end,
-})
-
--- 3. Auto Feed Mr. Crayon (Fitur Baru)
-TabEvent:CreateToggle({
-    Name = "Auto Feed Mr. Crayon",
-    Default = false,
-    Flag = "AutoFeedMrCrayonToggle",
-    Callback = function(Value)
-        Settings.AutoFeedMrCrayonEnabled = Value
-        if Value then
-            task.spawn(function()
-                while Settings.AutoFeedMrCrayonEnabled do
-                    pcall(function()
+                    local args = {
+                        [1] = "booster",
+                        [2] = Settings.SelectedFoodTray,
+                        [3] = AutoPlaceTargetPosition
+                    }
+                    pcall(function() 
                         local container = GetRemoteContainer()
-                        if container and container:FindFirstChild("cartoon.feedMrCrayonAll") then
-                            container["cartoon.feedMrCrayonAll"]:FireServer()
+                        if container and container:FindFirstChild("ponds.placeBuilding") then
+                            container["ponds.placeBuilding"]:InvokeServer(unpack(args))
                         end
                     end)
                     task.wait(Settings.LoopTime)
@@ -307,31 +285,162 @@ TabEvent:CreateToggle({
     end,
 })
 
--- 4. Auto Open Crate
-local CrateDropdown = TabEvent:CreateDropdown({
-    Name = "Select Crate",
-    Options = DaftarCratesDisplay,
-    Default = "",
+RightGroupDiscord:AddLabel("Join Discord for updates & key!")
+RightGroupDiscord:AddButton({
+    Text = "Copy Discord Link",
+    Func = function()
+        pcall(function()
+            setclipboard("https://discord.gg/xeyVYZkME6")
+            Library:Notify("Discord link copied!", 3)
+        end)
+    end,
+})
+
+-- ==========================================
+-- TAB 2: EVENT
+-- ==========================================
+local LeftGroupTeleport = Tabs.Event:AddLeftGroupbox("Area Teleport", "navigation")
+local LeftGroupEventItem = Tabs.Event:AddLeftGroupbox("Buy Event Item", "shopping-cart")
+local LeftGroupTaskBee = Tabs.Event:AddLeftGroupbox("Auto Submit Task Bee", "check-circle")
+local RightGroupCrate = Tabs.Event:AddRightGroupbox("Open Crate", "box")
+
+LeftGroupTeleport:AddButton({
+    Text = "Teleport to Event Area",
+    Func = function()
+        pcall(function()
+            if LocalPlayer and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(EventAreaCoordinate)
+            end
+        end)
+    end,
+})
+
+LeftGroupTeleport:AddToggle("FloatingTeleportToggle", {
+    Text = "Show Floating Teleport Button",
+    Default = false,
+    Callback = function(Value)
+        Settings.FloatingTeleportEnabled = Value
+        TeleButton.Visible = Value
+    end,
+})
+
+LeftGroupEventItem:AddDropdown("EventItemDropdown", {
+    Values = DaftarEventItemsDisplay,
+    Default = 1,
     Multi = false,
-    Flag = "CrateDropdown",
+    Text = "Select Event Item",
+    Callback = function(Selected)
+        Settings.SelectedEventItem = GetRealName(Selected, DaftarEventItemsDisplay, DaftarEventItemsReal)
+    end,
+})
+
+LeftGroupEventItem:AddToggle("AutoBuyEventItemToggle", {
+    Text = "Auto Buy Event Item",
+    Default = false,
+    Callback = function(Value)
+        Settings.AutoBuyEventItemEnabled = Value
+        if Value then
+            task.spawn(function()
+                while Settings.AutoBuyEventItemEnabled do
+                    if Settings.SelectedEventItem ~= "" then
+                        local args = { [1] = Settings.SelectedEventItem }
+                        pcall(function() 
+                            local container = GetRemoteContainer()
+                            if container and container:FindFirstChild("shop.purchaseEventItem") then
+                                container["shop.purchaseEventItem"]:FireServer(unpack(args)) 
+                            end
+                        end)
+                    end
+                    task.wait()
+                end
+            end)
+        end
+    end,
+})
+
+LeftGroupTaskBee:AddToggle("AutoSubmitBee1Toggle", {
+    Text = "Auto Submit Task Bee 1",
+    Default = false,
+    Callback = function(Value)
+        Settings.AutoSubmitBee1 = Value
+        if Value then
+            task.spawn(function()
+                while Settings.AutoSubmitBee1 do
+                    pcall(function()
+                        local container = GetRemoteContainer()
+                        if container and container:FindFirstChild("bee.submitToDispenser") then
+                            container["bee.submitToDispenser"]:FireServer(1)
+                        end
+                    end)
+                    task.wait(Settings.LoopTime)
+                end
+            end)
+        end
+    end,
+})
+
+LeftGroupTaskBee:AddToggle("AutoSubmitBee2Toggle", {
+    Text = "Auto Submit Task Bee 2",
+    Default = false,
+    Callback = function(Value)
+        Settings.AutoSubmitBee2 = Value
+        if Value then
+            task.spawn(function()
+                while Settings.AutoSubmitBee2 do
+                    pcall(function()
+                        local container = GetRemoteContainer()
+                        if container and container:FindFirstChild("bee.submitToDispenser") then
+                            container["bee.submitToDispenser"]:FireServer(2)
+                        end
+                    end)
+                    task.wait(Settings.LoopTime)
+                end
+            end)
+        end
+    end,
+})
+
+LeftGroupTaskBee:AddToggle("AutoSubmitBee3Toggle", {
+    Text = "Auto Submit Task Bee 3",
+    Default = false,
+    Callback = function(Value)
+        Settings.AutoSubmitBee3 = Value
+        if Value then
+            task.spawn(function()
+                while Settings.AutoSubmitBee3 do
+                    pcall(function()
+                        local container = GetRemoteContainer()
+                        if container and container:FindFirstChild("bee.submitToDispenser") then
+                            container["bee.submitToDispenser"]:FireServer(3)
+                        end
+                    end)
+                    task.wait(Settings.LoopTime)
+                end
+            end)
+        end
+    end,
+})
+
+RightGroupCrate:AddDropdown("CrateDropdown", {
+    Values = DaftarCratesDisplay,
+    Default = 1,
+    Multi = false,
+    Text = "Select Crate",
     Callback = function(Selected)
         Settings.SelectedCrate = GetRealName(Selected, DaftarCratesDisplay, DaftarCratesReal)
     end,
 })
 
-TabEvent:CreateToggle({
-    Name = "Auto Open Crate",
+RightGroupCrate:AddToggle("AutoOpenCrateToggle", {
+    Text = "Auto Open Crate",
     Default = false,
-    Flag = "AutoOpenCrateToggle",
     Callback = function(Value)
         Settings.AutoOpenCrateEnabled = Value
         if Value then
             task.spawn(function()
                 while Settings.AutoOpenCrateEnabled do
                     if Settings.SelectedCrate ~= "" then
-                        local args = {
-                            [1] = Settings.SelectedCrate .. ":normal"
-                        }
+                        local args = { [1] = Settings.SelectedCrate .. ":normal" }
                         pcall(function() 
                             local container = GetRemoteContainer()
                             if container and container:FindFirstChild("store.openBaitPack") then
@@ -347,33 +456,29 @@ TabEvent:CreateToggle({
 })
 
 -- ==========================================
--- TAB 3: GEAR SHOP
+-- TAB 3: SHOP
 -- ==========================================
-local TabGear = Window:CreateTab({ 
-    Name = "Gear Shop", 
-    Icon = "⚙️",
-    Notes = "Select multiple gears simultaneously using the Multi-select dropdown."
-})
+local LeftGroupGear = Tabs.Shop:AddLeftGroupbox("Gear Shop", "shield")
+local LeftGroupBait = Tabs.Shop:AddLeftGroupbox("Bait Shop", "anchor")
+local RightGroupEgg = Tabs.Shop:AddRightGroupbox("Egg Shop", "circle")
 
-local GearDropdownUI = TabGear:CreateDropdown({
-    Name = "Select Gear (Stackable)",
-    Options = DaftarGearsDisplay,
+LeftGroupGear:AddDropdown("GearDropdown", {
+    Values = DaftarGearsDisplay,
     Default = {},
     Multi = true,
-    Flag = "GearDropdown",
+    Text = "Select Gear (Stackable)",
     Callback = function(SelectedArray) 
         local realArray = {}
-        for _, dispName in ipairs(SelectedArray) do
-            table.insert(realArray, GetRealName(dispName, DaftarGearsDisplay, DaftarGearsReal))
+        for dispName, state in pairs(SelectedArray) do
+            if state then table.insert(realArray, GetRealName(dispName, DaftarGearsDisplay, DaftarGearsReal)) end
         end
         Settings.SelectedGears = realArray 
     end,
 })
 
-TabGear:CreateToggle({
-    Name = "Auto Buy Gear",
+LeftGroupGear:AddToggle("AutoBuyGearToggle", {
+    Text = "Auto Buy Gear",
     Default = false,
-    Flag = "AutoBuyGearToggle",
     Callback = function(Value)
         Settings.AutoBuyGearEnabled = Value
         if Value then
@@ -386,43 +491,32 @@ TabGear:CreateToggle({
                                 container["shop.purchaseGear"]:FireServer(gearName) 
                             end
                         end)
-                        task.wait(0.01)
+                        task.wait()
                     end
-                    task.wait(Settings.LoopTime)
+                    task.wait(0.05)
                 end
             end)
         end
     end,
 })
 
--- ==========================================
--- TAB 4: BAIT SHOP
--- ==========================================
-local TabBait = Window:CreateTab({ 
-    Name = "Bait Shop", 
-    Icon = "🪱",
-    Notes = "Select multiple baits simultaneously using the Multi-select dropdown."
-})
-
-local BaitDropdownUI = TabBait:CreateDropdown({
-    Name = "Select Bait (Stackable)",
-    Options = DaftarBaitsDisplay,
+LeftGroupBait:AddDropdown("BaitDropdown", {
+    Values = DaftarBaitsDisplay,
     Default = {},
     Multi = true,
-    Flag = "BaitDropdown",
+    Text = "Select Bait (Stackable)",
     Callback = function(SelectedArray) 
         local realArray = {}
-        for _, dispName in ipairs(SelectedArray) do
-            table.insert(realArray, GetRealName(dispName, DaftarBaitsDisplay, DaftarBaitsReal))
+        for dispName, state in pairs(SelectedArray) do
+            if state then table.insert(realArray, GetRealName(dispName, DaftarBaitsDisplay, DaftarBaitsReal)) end
         end
         Settings.SelectedBaits = realArray 
     end,
 })
 
-TabBait:CreateToggle({
-    Name = "Auto Buy Bait",
+LeftGroupBait:AddToggle("AutoBuyBaitToggle", {
+    Text = "Auto Buy Bait",
     Default = false,
-    Flag = "AutoBuyBaitToggle",
     Callback = function(Value)
         Settings.AutoBuyBaitEnabled = Value
         if Value then
@@ -435,43 +529,32 @@ TabBait:CreateToggle({
                                 container["shop.purchaseBait"]:FireServer(baitName) 
                             end
                         end)
-                        task.wait(0.01)
+                        task.wait()
                     end
-                    task.wait(Settings.LoopTime)
+                    task.wait(0.05)
                 end
             end)
         end
     end,
 })
 
--- ==========================================
--- TAB 5: EGG SHOP
--- ==========================================
-local TabEgg = Window:CreateTab({ 
-    Name = "Egg Shop", 
-    Icon = "🥚",
-    Notes = "Select multiple eggs simultaneously using the Multi-select dropdown."
-})
-
-local EggDropdownUI = TabEgg:CreateDropdown({
-    Name = "Select Egg (Stackable)",
-    Options = DaftarEggsDisplay,
+RightGroupEgg:AddDropdown("EggDropdown", {
+    Values = DaftarEggsDisplay,
     Default = {},
     Multi = true,
-    Flag = "EggDropdown",
+    Text = "Select Egg (Stackable)",
     Callback = function(SelectedArray) 
         local realArray = {}
-        for _, dispName in ipairs(SelectedArray) do
-            table.insert(realArray, GetRealName(dispName, DaftarEggsDisplay, DaftarEggsReal))
+        for dispName, state in pairs(SelectedArray) do
+            if state then table.insert(realArray, GetRealName(dispName, DaftarEggsDisplay, DaftarEggsReal)) end
         end
         Settings.SelectedEggs = realArray 
     end,
 })
 
-TabEgg:CreateToggle({
-    Name = "Auto Buy Egg",
+RightGroupEgg:AddToggle("AutoBuyEggToggle", {
+    Text = "Auto Buy Egg",
     Default = false,
-    Flag = "AutoBuyEggToggle",
     Callback = function(Value)
         Settings.AutoBuyEggEnabled = Value
         if Value then
@@ -484,9 +567,9 @@ TabEgg:CreateToggle({
                                 container["shop.purchaseEgg"]:FireServer(eggName) 
                             end
                         end)
-                        task.wait(0.01)
+                        task.wait()
                     end
-                    task.wait(Settings.LoopTime)
+                    task.wait(0.05)
                 end
             end)
         end
@@ -494,33 +577,29 @@ TabEgg:CreateToggle({
 })
 
 -- ==========================================
--- TAB 6: TRAVELING MERCHANT
+-- TAB 4: MERCH
 -- ==========================================
-local TabTraveling = Window:CreateTab({ 
-    Name = "TravMerch", 
-    Icon = "🛒",
-    Notes = "Select multiple items simultaneously using the Multi-select dropdown."
-})
+local LeftGroupTraveling = Tabs.Merch:AddLeftGroupbox("Traveling Merchant", "truck")
+local RightGroupCosmetic = Tabs.Merch:AddRightGroupbox("Cosmetic Merchant", "gift")
+local LeftGroupSellFish = Tabs.Merch:AddLeftGroupbox("Sell Fish", "dollar-sign")
 
-local TravelingDropdownUI = TabTraveling:CreateDropdown({
-    Name = "Select Traveling Item (Stackable)",
-    Options = DaftarTravelingItemsDisplay,
+LeftGroupTraveling:AddDropdown("TravelingDropdown", {
+    Values = DaftarTravelingItemsDisplay,
     Default = {},
     Multi = true,
-    Flag = "TravelingDropdown",
+    Text = "Select Traveling Item (Stackable)",
     Callback = function(SelectedArray) 
         local realArray = {}
-        for _, dispName in ipairs(SelectedArray) do
-            table.insert(realArray, GetRealName(dispName, DaftarTravelingItemsDisplay, DaftarTravelingItemsReal))
+        for dispName, state in pairs(SelectedArray) do
+            if state then table.insert(realArray, GetRealName(dispName, DaftarTravelingItemsDisplay, DaftarTravelingItemsReal)) end
         end
         Settings.SelectedTravelingItems = realArray 
     end,
 })
 
-TabTraveling:CreateToggle({
-    Name = "Auto Buy Traveling Merchant",
+LeftGroupTraveling:AddToggle("AutoBuyTravelingToggle", {
+    Text = "Auto Buy Traveling Merchant",
     Default = false,
-    Flag = "AutoBuyTravelingToggle",
     Callback = function(Value)
         Settings.AutoBuyTravelingEnabled = Value
         if Value then
@@ -533,43 +612,32 @@ TabTraveling:CreateToggle({
                                 container["merchant.purchaseItem"]:FireServer("travelling", itemName) 
                             end
                         end)
-                        task.wait(0.01)
+                        task.wait()
                     end
-                    task.wait(Settings.LoopTime)
+                    task.wait(0.05)
                 end
             end)
         end
     end,
 })
 
--- ==========================================
--- TAB 7: COSMETIC MERCHANT
--- ==========================================
-local TabCosmetic = Window:CreateTab({ 
-    Name = "CosMerch", 
-    Icon = "✨",
-    Notes = "Select multiple cosmetics simultaneously using the Multi-select dropdown."
-})
-
-local CosmeticDropdownUI = TabCosmetic:CreateDropdown({
-    Name = "Select Cosmetic (Stackable)",
-    Options = DaftarCosmeticsDisplay,
+RightGroupCosmetic:AddDropdown("CosmeticDropdown", {
+    Values = DaftarCosmeticsDisplay,
     Default = {},
     Multi = true,
-    Flag = "CosmeticDropdown",
+    Text = "Select Cosmetic (Stackable)",
     Callback = function(SelectedArray) 
         local realArray = {}
-        for _, dispName in ipairs(SelectedArray) do
-            table.insert(realArray, GetRealName(dispName, DaftarCosmeticsDisplay, DaftarCosmeticsReal))
+        for dispName, state in pairs(SelectedArray) do
+            if state then table.insert(realArray, GetRealName(dispName, DaftarCosmeticsDisplay, DaftarCosmeticsReal)) end
         end
         Settings.SelectedCosmetics = realArray 
     end,
 })
 
-TabCosmetic:CreateToggle({
-    Name = "Auto Buy Cosmetic",
+RightGroupCosmetic:AddToggle("AutoBuyCosmeticToggle", {
+    Text = "Auto Buy Cosmetic",
     Default = false,
-    Flag = "AutoBuyCosmeticToggle",
     Callback = function(Value)
         Settings.AutoBuyCosmeticEnabled = Value
         if Value then
@@ -582,11 +650,120 @@ TabCosmetic:CreateToggle({
                                 container["cosmeticsMerchant.purchase"]:FireServer(cosmeticName, true) 
                             end
                         end)
-                        task.wait(0.01)
+                        task.wait()
                     end
+                    task.wait(0.05)
+                end
+            end)
+        end
+    end,
+})
+
+-- Manual Sell Fish button menggunakan sellFish.sellAllFish:FireServer()
+LeftGroupSellFish:AddButton({
+    Text = "Sell Fish (Manual UI)",
+    Func = function()
+        pcall(function()
+            local container = GetRemoteContainer()
+            if container and container:FindFirstChild("sellFish.sellAllFish") then
+                container["sellFish.sellAllFish"]:FireServer()
+            end
+        end)
+    end,
+})
+
+-- Auto Sell Fish loop menggunakan sellFish.sellAllFish:FireServer()
+LeftGroupSellFish:AddToggle("AutoSellFishToggle", {
+    Text = "Auto Sell Fish (Timed Loop)",
+    Default = false,
+    Callback = function(Value)
+        Settings.AutoSellFishEnabled = Value
+        if Value then
+            task.spawn(function()
+                while Settings.AutoSellFishEnabled do
+                    pcall(function()
+                        local container = GetRemoteContainer()
+                        if container and container:FindFirstChild("sellFish.sellAllFish") then
+                            container["sellFish.sellAllFish"]:FireServer()
+                        end
+                    end)
                     task.wait(Settings.LoopTime)
                 end
             end)
         end
     end,
 })
+
+LeftGroupSellFish:AddToggle("FloatingSellToggle", {
+    Text = "Show Floating Sell Button",
+    Default = false,
+    Callback = function(Value)
+        Settings.FloatingSellEnabled = Value
+        SellButton.Visible = Value
+    end,
+})
+
+-- ==========================================
+-- TAB 5: UI SETTINGS
+-- ==========================================
+local MenuGroup = Tabs["UI Settings"]:AddLeftGroupbox("Menu", "wrench")
+
+MenuGroup:AddToggle("KeybindMenuOpen", {
+    Default = Library.KeybindFrame.Visible,
+    Text = "Open Keybind Menu",
+    Callback = function(value)
+        Library.KeybindFrame.Visible = value
+    end,
+})
+
+MenuGroup:AddToggle("ShowCustomCursor", {
+    Text = "Custom Cursor",
+    Default = true,
+    Callback = function(Value)
+        Library.ShowCustomCursor = Value
+    end,
+})
+
+MenuGroup:AddDropdown("NotificationSide", {
+    Values = { "Left", "Right" },
+    Default = "Right",
+    Text = "Notification Side",
+    Callback = function(Value)
+        Library:SetNotifySide(Value)
+    end,
+})
+
+MenuGroup:AddDropdown("DPIDropdown", {
+    Values = { "50%", "75%", "100%", "125%", "150%", "175%", "200%" },
+    Default = "100%",
+    Text = "DPI Scale",
+    Callback = function(Value)
+        Value = Value:gsub("%%", "")
+        local DPI = tonumber(Value)
+        Library:SetDPIScale(DPI)
+    end,
+})
+
+MenuGroup:AddDivider()
+MenuGroup:AddLabel("Menu bind")
+    :AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
+
+MenuGroup:AddButton("Unload", function()
+    Library:Unload()
+end)
+
+Library.ToggleKeybind = Options.MenuKeybind
+
+ThemeManager:SetLibrary(Library)
+SaveManager:SetLibrary(Library)
+
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetIgnoreIndexes({ "MenuKeybind" })
+
+ThemeManager:SetFolder("EWEHUB_FAF")
+SaveManager:SetFolder("EWEHUB_FAF/settings")
+
+SaveManager:BuildConfigSection(Tabs["UI Settings"])
+ThemeManager:ApplyToTab(Tabs["UI Settings"])
+
+SaveManager:LoadAutoloadConfig()
