@@ -91,8 +91,8 @@ local DaftarBaitsDisplay = {
     "Kraken", "Maw", "Bloop", "OceanEater", "Serpent", "DoomRex"
 }
 
-local DaftarEggsReal = { "Starter", "Basic", "Forest", "Polar", "Tropical", "Exotic" }
-local DaftarEggsDisplay = { "starter", "Basic", "Forest", "Polar", "Tropical", "Exotic" }
+local DaftarEggsReal = { "Starter", "Novice", "Forest", "Polar", "Tropical", "Exotic" }
+local DaftarEggsDisplay = { "starter", "Novice", "Forest", "Polar", "Tropical", "Exotic" }
 
 local DaftarTravelingItemsReal = { "Zoo", "Wild", "Boba", "Punk", "PetTag", "Ashen" }
 local DaftarTravelingItemsDisplay = { "Zoo", "Wild Egg", "Boba Egg", "Punk", "Pet Tag", "Ashen" }
