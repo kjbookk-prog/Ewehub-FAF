@@ -96,7 +96,7 @@ local Games = {
 
     [8243724761] = {
         Name = "Farm A Fish",
-        URL = "",
+        URL = "https://raw.githubusercontent.com/kjbookk-prog/Ewehub-FAF/refs/heads/main/ewehub.lua",
     },
     [292439477] = {
         Name = "Phantom Forces",
