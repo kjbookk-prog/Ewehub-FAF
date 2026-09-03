@@ -94,8 +94,8 @@ local Games = {
     -- Format: [UniverseId] = { Name = "...", URL = "..." }
     -- Tambahkan game baru di bawah ini:
 
-    [286090429] = {
-        Name = "Arsenal",
+    [8243724761] = {
+        Name = "Farm A Fish",
         URL = "",
     },
     [292439477] = {
