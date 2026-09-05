@@ -12,7 +12,7 @@ Library.ShowToggleFrameInKeybinds = true
 
 local Window = Library:CreateWindow({
     Title = "EWEHUB | FAF",
-    Footer = "version: obsidian",
+    Footer = "FREE KEY AT DC SERVER",
     Icon = 95816097006870,
     NotifySide = "Right",
     ShowCustomCursor = true,
@@ -39,6 +39,7 @@ local Settings = {
     AutoSubmitBee1 = false,
     AutoSubmitBee2 = false,
     AutoSubmitBee3 = false,
+    AutoFeedKingBee = false,
     
     AutoSellFishEnabled = false,
     
@@ -91,8 +92,8 @@ local DaftarBaitsDisplay = {
     "Kraken", "Maw", "Bloop", "OceanEater", "Serpent", "DoomRex"
 }
 
-local DaftarEggsReal = { "Starter", "Novice", "Forest", "Polar", "Tropical", "Exotic" }
-local DaftarEggsDisplay = { "starter", "Novice", "Forest", "Polar", "Tropical", "Exotic" }
+local DaftarEggsReal = { "Starter", "Basic", "Forest", "Polar", "Tropical", "Exotic" }
+local DaftarEggsDisplay = { "starter", "Basic", "Forest", "Polar", "Tropical", "Exotic" }
 
 local DaftarTravelingItemsReal = { "Zoo", "Wild", "Boba", "Punk", "PetTag", "Ashen" }
 local DaftarTravelingItemsDisplay = { "Zoo", "Wild Egg", "Boba Egg", "Punk", "Pet Tag", "Ashen" }
@@ -102,11 +103,11 @@ local DaftarCosmeticsReal = {
 }
 local DaftarCosmeticsDisplay = DaftarCosmeticsReal
 
-local DaftarCratesReal = { "Nuke", "Cartoon", "Bee"}
-local DaftarCratesDisplay = { "Nuke", "Cartoon", "Bee"}
+local DaftarCratesReal = { "Nuke", "Cartoon" }
+local DaftarCratesDisplay = { "Nuke", "Cartoon" }
 
-local DaftarEventItemsReal = { "baitpack:Bee"}
-local DaftarEventItemsDisplay = { "Bee create"}
+local DaftarEventItemsReal = { "baitpack:Cartoon", "egg:Cartoon" }
+local DaftarEventItemsDisplay = { "cartoon create", "cartoon egg" }
 
 local EventAreaCoordinate = Vector3.new(0.53, 9.65, 13.83)
 local AutoPlaceTargetPosition = Vector3.new(67.86299896240234, -0.012000083923339844, -11)
@@ -181,7 +182,6 @@ local SellCorner = Instance.new("UICorner")
 SellCorner.CornerRadius = UDim.new(1, 0)
 SellCorner.Parent = SellButton
 
--- Floating Sell Button menggunakan remote update (sellFish.sellAllFish)
 SellButton.MouseButton1Click:Connect(function()
     pcall(function()
         local container = GetRemoteContainer()
@@ -303,6 +303,7 @@ local LeftGroupTeleport = Tabs.Event:AddLeftGroupbox("Area Teleport", "navigatio
 local LeftGroupEventItem = Tabs.Event:AddLeftGroupbox("Buy Event Item", "shopping-cart")
 local LeftGroupTaskBee = Tabs.Event:AddLeftGroupbox("Auto Submit Task Bee", "check-circle")
 local RightGroupCrate = Tabs.Event:AddRightGroupbox("Open Crate", "box")
+local RightGroupFeedBee = Tabs.Event:AddRightGroupbox("Feed King Bee", "heart") -- Groupbox baru di bawah Open Crate
 
 LeftGroupTeleport:AddButton({
     Text = "Teleport to Event Area",
@@ -449,6 +450,28 @@ RightGroupCrate:AddToggle("AutoOpenCrateToggle", {
                         end)
                     end
                     task.wait(Settings.OpenCrateDelay)
+                end
+            end)
+        end
+    end,
+})
+
+-- Auto Feed King Bee dipisah dan diletakkan di bawah Open Crate
+RightGroupFeedBee:AddToggle("AutoFeedKingBeeToggle", {
+    Text = "Auto Feed King Bee",
+    Default = false,
+    Callback = function(Value)
+        Settings.AutoFeedKingBee = Value
+        if Value then
+            task.spawn(function()
+                while Settings.AutoFeedKingBee do
+                    pcall(function()
+                        local container = GetRemoteContainer()
+                        if container and container:FindFirstChild("bee.feedKingBeeAll") then
+                            container["bee.feedKingBeeAll"]:FireServer()
+                        end
+                    end)
+                    task.wait(Settings.LoopTime)
                 end
             end)
         end
@@ -659,7 +682,6 @@ RightGroupCosmetic:AddToggle("AutoBuyCosmeticToggle", {
     end,
 })
 
--- Manual Sell Fish button menggunakan sellFish.sellAllFish:FireServer()
 LeftGroupSellFish:AddButton({
     Text = "Sell Fish (Manual UI)",
     Func = function()
@@ -672,7 +694,6 @@ LeftGroupSellFish:AddButton({
     end,
 })
 
--- Auto Sell Fish loop menggunakan sellFish.sellAllFish:FireServer()
 LeftGroupSellFish:AddToggle("AutoSellFishToggle", {
     Text = "Auto Sell Fish (Timed Loop)",
     Default = false,
