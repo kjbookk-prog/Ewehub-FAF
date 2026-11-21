@@ -83,13 +83,13 @@ local DaftarBaitsReal = {
     "Starter", "Novice", "Reef", "DeepSea", "Koi", "River", 
     "Puffer", "Glo", "Seal", "Ray", "Octopus", "Axolotl", 
     "Jelly", "Whale", "Shark", "Squid", "Megalodon", 
-    "Kraken", "Maja", "Bloop", "OceanEater", "Serpent", "DoomRex", "GrandTurtle"
+    "Kraken", "Maja", "Bloop", "OceanEater", "Serpent", "DoomRex", "GrandTurtle", "Cthulhu"
 }
 local DaftarBaitsDisplay = {
     "Starter", "Novice", "Reef", "DeepSea", "Koi", "River", 
     "Puffer", "Glo", "Seal", "Ray", "Octopus", "Axolotl", 
     "Jelly", "Whale", "Shark", "Squid", "Megalodon", 
-    "Kraken", "Maw", "Bloop", "OceanEater", "Serpent", "DoomRex", "GrandTurtle"
+    "Kraken", "Maw", "Bloop", "OceanEater", "Serpent", "DoomRex", "GrandTurtle", "Ctulhu"
 }
 
 local DaftarEggsReal = { "Starter", "Basic", "Forest", "Polar", "Tropical", "Exotic" }
